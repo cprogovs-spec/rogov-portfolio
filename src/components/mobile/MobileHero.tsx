@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import WeatherClock from '@/components/WeatherClock'
-import GridBackground from '@/components/GridBackground'
+import ContactBackground from '@/components/ContactBackground'
 import RogovTitle from '@/components/RogovTitle'
 
 export default function MobileHero({ onScrollDown }: { onScrollDown: () => void }) {
@@ -13,7 +13,7 @@ export default function MobileHero({ onScrollDown }: { onScrollDown: () => void 
       background: '#0d0d0d', display: 'flex', flexDirection: 'column',
       overflow: 'hidden', flexShrink: 0,
     }}>
-      <GridBackground />
+      <ContactBackground />
 
       {/* Top bar */}
       <div style={{
