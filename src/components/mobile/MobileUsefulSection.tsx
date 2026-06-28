@@ -27,29 +27,29 @@ function MobileArticleCard({ a, index, onOpen }: { a: Article; index: number; on
       transition={{ duration: 0.5, delay: index * 0.07, ease: [0.22, 1, 0.36, 1] }}
       whileTap={{ scale: 0.985 }}
       style={{
-        background: '#111', border: '1px solid #1e1e1e', borderRadius: 3,
-        padding: '1.25rem', cursor: 'pointer', position: 'relative', overflow: 'hidden',
-        WebkitTapHighlightColor: 'transparent', display: 'flex', flexDirection: 'column', gap: '0.75rem',
+        background: 'rgba(255,255,255,0.02)', border: '1px solid #1e1e1e', borderRadius: 6,
+        padding: '1.1rem 1.1rem 1.1rem 1.4rem', cursor: 'pointer', position: 'relative', overflow: 'hidden',
+        WebkitTapHighlightColor: 'transparent', display: 'flex', flexDirection: 'column', gap: '0.6rem',
       }}
     >
       <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: 2, background: `linear-gradient(to bottom, transparent, ${ACCENT}, transparent)` }} />
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8, marginBottom: 8 }}>
         <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
           {a.tags.map(t => (
-            <span key={t} style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.1em', color: ACCENT, border: `1px solid ${ACCENT}44`, padding: '2px 7px', borderRadius: 2 }}>{t}</span>
+            <span key={t} style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.1em', color: ACCENT, border: `1px solid ${ACCENT}44`, padding: '2px 7px', borderRadius: 2 }}>{t}</span>
           ))}
         </div>
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#c0c0c0', whiteSpace: 'nowrap', flexShrink: 0 }}>
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: '#c0c0c0', whiteSpace: 'nowrap', flexShrink: 0 }}>
           {new Date(a.date).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' })}
         </span>
       </div>
 
-      <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.1rem, 5.5vw, 1.5rem)', color: '#ccc', lineHeight: 1.05, letterSpacing: '-0.01em' }}>{a.title}</h3>
-      <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.85rem', color: '#aaa', lineHeight: 1.6 }}>{a.preview}</p>
+      <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(0.95rem, 4.5vw, 1.2rem)', color: '#f0f0f0', lineHeight: 1.1, letterSpacing: '-0.01em', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{a.title}</h3>
+      <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.82rem', color: '#aaa', lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{a.preview}</p>
 
-      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.88rem', letterSpacing: '0.1em', color: ACCENT }}>ЧИТАТЬ ↗</span>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 'auto' }}>
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', letterSpacing: '0.1em', color: ACCENT }}>ЧИТАТЬ ↗</span>
       </div>
     </motion.div>
   )

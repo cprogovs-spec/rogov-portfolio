@@ -37,48 +37,32 @@ function MobileMotionCard({ w, index, onOpen }: { w: Work; index: number; onOpen
       transition={{ duration: 0.5, delay: index * 0.07, ease: [0.22, 1, 0.36, 1] }}
       whileTap={{ scale: 0.985 }}
       style={{
-        background: '#111', border: '1px solid #1e1e1e', borderRadius: 3,
+        border: `1px solid ${w.accent}33`, borderRadius: 6,
         cursor: 'pointer', position: 'relative', overflow: 'hidden',
-        WebkitTapHighlightColor: 'transparent', minHeight: 150,
-        display: 'flex', flexDirection: 'column',
+        WebkitTapHighlightColor: 'transparent', height: 180, background: '#0d0d0d',
       }}
     >
-      {w.cover && (
-        <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
-          <CoverMedia src={w.cover} type={w.coverType} hovered={true} bgOpacity={0.2} />
-          <div style={{ position: 'absolute', inset: 0, background: '#111', opacity: 0.82 }} />
-        </div>
-      )}
-      {/* gradient bar bottom */}
+      <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+        <CoverMedia src={w.cover} type={w.coverType} hovered={true} />
+      </div>
       <div style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0, height: 2, zIndex: 2,
-        background: w.colors.length > 0 ? `linear-gradient(90deg, ${w.colors.join(', ')})` : w.accent,
-      }} />
-
-      <div style={{ position: 'relative', zIndex: 1, padding: '1.25rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
-          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-            {w.tags.map(t => (
-              <span key={t} style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.1em', color: w.accent, border: `1px solid ${w.accent}44`, padding: '2px 7px', borderRadius: 2 }}>{t}</span>
-            ))}
+        position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 1,
+        background: 'linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.4) 60%, transparent 100%)',
+        padding: '2rem 1rem 0.85rem',
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+          <div>
+            <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap', marginBottom: 5 }}>
+              {w.tags.slice(0, 2).map(t => (
+                <span key={t} style={{ fontFamily: 'var(--font-mono)', fontSize: '0.55rem', letterSpacing: '0.1em', color: w.accent, border: `1px solid ${w.accent}55`, padding: '1px 6px', borderRadius: 2 }}>{t}</span>
+              ))}
+            </div>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(0.95rem, 4.5vw, 1.2rem)', color: '#f0f0f0', lineHeight: 1.1, letterSpacing: '-0.01em', margin: 0, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{w.title}</h3>
           </div>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.85rem', color: '#c0c0c0' }}>{w.year}</span>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 8 }}>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#2a2a2a' }}>{w.num}</span>
-          <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.4rem, 7vw, 2rem)', color: '#ccc', lineHeight: 0.95, letterSpacing: '-0.01em' }}>{w.title}</h3>
-        </div>
-
-        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.85rem', color: '#aaa', lineHeight: 1.55, marginBottom: 14, flex: 1 }}>{w.desc}</p>
-
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: 'flex', gap: 4 }}>
-            {w.colors.map((c, i) => (
-              <div key={i} style={{ width: 7, height: 7, borderRadius: '50%', background: c }} />
-            ))}
+          <div style={{ textAlign: 'right', flexShrink: 0, marginLeft: 8 }}>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: 'rgba(255,255,255,0.4)', marginBottom: 4 }}>{w.year}</div>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: w.accent }}>↗</span>
           </div>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.88rem', letterSpacing: '0.1em', color: w.accent }}>СМОТРЕТЬ ↗</span>
         </div>
       </div>
     </motion.div>
