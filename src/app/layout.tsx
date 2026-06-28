@@ -3,6 +3,12 @@ import "./globals.css";
 import { createClient } from '@supabase/supabase-js'
 import Analytics from '@/components/Analytics'
 
+export const metadata: Metadata = {
+  title: 'Рогов — Дизайнер',
+  description: 'Портфолио веб-дизайнера Рогова',
+  verification: { yandex: '55d9c97c614b8557' },
+}
+
 async function getSeoSettings() {
   try {
     const supabase = createClient(
@@ -13,30 +19,6 @@ async function getSeoSettings() {
     return data ?? null
   } catch {
     return null
-  }
-}
-
-export async function generateMetadata(): Promise<Metadata> {
-  const s = await getSeoSettings()
-
-  const title = s?.meta_title || 'Рогов — Дизайнер'
-  const description = s?.meta_description || 'Портфолио веб-дизайнера Рогова'
-  const ogTitle = s?.og_title || title
-  const ogDescription = s?.og_description || description
-  const ogImage = s?.og_image || null
-  const canonical = s?.canonical_url || null
-
-  return {
-    title,
-    description,
-    robots: s?.robots || 'index, follow',
-    verification: { yandex: '55d9c97c614b8557' },
-    ...(canonical ? { alternates: { canonical } } : {}),
-    openGraph: {
-      title: ogTitle,
-      description: ogDescription,
-      ...(ogImage ? { images: [{ url: ogImage }] } : {}),
-    },
   }
 }
 
