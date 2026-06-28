@@ -44,19 +44,6 @@ export default function MobileHero({ onScrollDown }: { onScrollDown: () => void 
           <RogovTitle fontSize="clamp(2.4rem, 13.5vw, 4rem)" baseColor="#e8e8e8" />
         </div>
 
-        <motion.p
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 1.4 }}
-          style={{
-            fontFamily: 'var(--font-sans)', fontSize: '0.75rem',
-            color: '#444', marginTop: '1.25rem',
-            letterSpacing: '0.04em', lineHeight: 1.6,
-            textAlign: 'center',
-          }}
-        >
-          Веб-дизайнер. UX/UI, нейросети, моушен.
-        </motion.p>
       </div>
 
       {/* CTA + scroll hint */}
@@ -110,7 +97,7 @@ export default function MobileHero({ onScrollDown }: { onScrollDown: () => void 
             background: 'none', border: 'none', cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
             fontFamily: 'var(--font-mono)', fontSize: '0.55rem',
-            letterSpacing: '0.14em', color: '#333',
+            letterSpacing: '0.14em', color: 'rgba(255,255,255,0.5)',
           }}
         >
           <motion.span
