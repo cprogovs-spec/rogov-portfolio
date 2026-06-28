@@ -258,20 +258,20 @@ export default function AboutPage() {
 
           <h1 style={{
             fontFamily: 'var(--font-display)',
-            fontSize: 'clamp(2rem, 10vw, 9rem)',
+            fontSize: 'clamp(2.8rem, 14vw, 9rem)',
             lineHeight: 0.95, letterSpacing: '-0.03em',
             margin: '0 0 1.5rem',
-            wordBreak: 'break-word',
           }}>
-            {chars.map((ch, i) => (
-              <span key={i} style={{
-                color: ch !== TITLE[i] ? ACCENT_BRIGHT : '#f0f0f0',
-                transition: 'color 0.1s',
-                textShadow: ch !== TITLE[i] ? `0 0 20px ${ACCENT_BRIGHT}88` : 'none',
-              }}>
-                {ch === ' ' ? ' ' : ch}
-              </span>
-            ))}
+            <div>
+              {chars.slice(0, 6).map((ch, i) => (
+                <span key={i} style={{ color: ch !== TITLE[i] ? ACCENT_BRIGHT : '#f0f0f0', transition: 'color 0.1s', textShadow: ch !== TITLE[i] ? `0 0 20px ${ACCENT_BRIGHT}88` : 'none' }}>{ch}</span>
+              ))}
+            </div>
+            <div>
+              {chars.slice(7).map((ch, i) => (
+                <span key={i} style={{ color: ch !== TITLE[i + 7] ? ACCENT_BRIGHT : '#f0f0f0', transition: 'color 0.1s', textShadow: ch !== TITLE[i + 7] ? `0 0 20px ${ACCENT_BRIGHT}88` : 'none' }}>{ch}</span>
+              ))}
+            </div>
           </h1>
 
           {/* Info rows — mobile friendly */}
