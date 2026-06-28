@@ -17,8 +17,12 @@ function ContactModal({ onClose }: { onClose: () => void }) {
       <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         style={{
-          position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-          width: 'min(520px, 92vw)', background: '#0d0d0d',
+          position: 'fixed',
+          top: '4vh', left: '4vw', right: '4vw',
+          maxHeight: '92svh', overflowY: 'auto',
+          margin: '0 auto',
+          width: 'auto', maxWidth: 520,
+          background: '#0d0d0d',
           border: '1px solid #6B935C33', borderRadius: 6, zIndex: 1001, padding: '1.5rem',
         }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
