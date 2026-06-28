@@ -123,7 +123,7 @@ function MobileMotionExpanded({ w, onClose }: { w: Work; onClose: () => void }) 
               <span key={t} style={{ fontFamily: 'var(--font-mono)', fontSize: '0.85rem', letterSpacing: '0.1em', color: w.accent, border: `1px solid ${w.accent}44`, padding: '3px 9px', borderRadius: 2 }}>{t}</span>
             ))}
           </div>
-          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.2rem, 10vw, 3.5rem)', color: '#e8e8e8', lineHeight: 0.9, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>{w.title}</h2>
+          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.5rem, 7vw, 2.5rem)', color: '#e8e8e8', lineHeight: 1.0, letterSpacing: '-0.02em', marginBottom: '1rem', wordBreak: 'break-word', overflowWrap: 'break-word' }}>{w.title}</h2>
 
           <div style={{ display: 'flex', gap: '2rem', marginBottom: '1.25rem' }}>
             {[['Роль', w.role], ['Срок', w.duration]].map(([label, val]) => (
