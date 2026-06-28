@@ -192,9 +192,6 @@ export default function UsefulSection() {
         transition={{ duration: 0.5 }}
         style={{ marginBottom: '1.5rem' }}
       >
-        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', letterSpacing: '0.18em', color: ACCENT, marginBottom: 8 }}>
-          05 / ПОЛЕЗНОЕ
-        </div>
         <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 5vw, 4rem)', color: '#f0f0f0', lineHeight: 0.9, letterSpacing: '-0.02em' }}>СТАТЬИ</h2>
         <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: '#444', marginTop: 10, maxWidth: 420 }}>
           Материалы о дизайне, инструментах и процессах — для клиентов, коллег и поисковиков
