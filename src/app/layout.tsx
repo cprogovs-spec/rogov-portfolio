@@ -30,6 +30,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title,
     description,
     robots: s?.robots || 'index, follow',
+    verification: { yandex: '55d9c97c614b8557' },
     ...(canonical ? { alternates: { canonical } } : {}),
     openGraph: {
       title: ogTitle,
