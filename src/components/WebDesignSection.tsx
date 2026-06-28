@@ -19,7 +19,7 @@ type Case = {
   duration: string
   cover: string
   coverType: 'image' | 'video'
-  media: { url: string; type: 'image' | 'video' }[]
+  media: { url: string; type: 'image' | 'video'; caption?: string }[]
 }
 
 function CaseCard({ c, index, onOpen }: { c: Case; index: number; onOpen: (id: string) => void }) {
@@ -151,62 +151,78 @@ function CaseExpanded({ c, onClose }: { c: Case; onClose: () => void }) {
           background: `radial-gradient(ellipse at 20% 20%, ${c.accent}18 0%, transparent 60%)`,
         }} />
 
-        {/* Scrollable content */}
-        <div style={{ position: 'relative', zIndex: 2, flex: 1, overflow: 'auto', padding: 'clamp(2rem, 4vw, 3.5rem)' }}>
-          {/* Close */}
-          <motion.button
-            onClick={onClose}
-            whileHover={{ color: '#f0f0f0', scale: 1.1 }}
-            style={{
-              position: 'absolute', top: '1.5rem', right: '1.5rem',
-              fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.1em',
-              color: '#aaa', background: 'none', border: '1px solid #2a2a2a',
-              padding: '6px 12px', cursor: 'pointer', borderRadius: 2,
-            }}
-          >ESC ✕</motion.button>
+        {/* Two-column layout */}
+        <div style={{ position: 'relative', zIndex: 2, flex: 1, overflow: 'hidden', display: 'flex' }}>
 
-          {/* Tags + year */}
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: '1.5rem' }}>
-            {c.tags.map(t => (
-              <span key={t} style={{
-                fontFamily: 'var(--font-mono)', fontSize: '0.88rem', letterSpacing: '0.12em',
-                color: c.accent, border: `1px solid ${c.accent}55`, padding: '3px 10px', borderRadius: 2,
-              }}>{t}</span>
-            ))}
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.88rem', color: '#aaa', marginLeft: 'auto' }}>{c.year}</span>
+          {/* LEFT — text content */}
+          <div style={{ flex: '0 0 42%', overflow: 'auto', padding: 'clamp(2rem, 3vw, 3rem)', borderRight: `1px solid ${c.accent}22` }}>
+            {/* Close */}
+            <motion.button
+              onClick={onClose}
+              whileHover={{ color: '#f0f0f0', scale: 1.1 }}
+              style={{
+                position: 'absolute', top: '1.5rem', right: 'calc(58% + 1rem)',
+                fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.1em',
+                color: '#aaa', background: 'none', border: '1px solid #2a2a2a',
+                padding: '6px 12px', cursor: 'pointer', borderRadius: 2,
+              }}
+            >ESC ✕</motion.button>
+
+            {/* Tags + year */}
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: '1.25rem' }}>
+              {c.tags.map(t => (
+                <span key={t} style={{
+                  fontFamily: 'var(--font-mono)', fontSize: '0.78rem', letterSpacing: '0.12em',
+                  color: c.accent, border: `1px solid ${c.accent}55`, padding: '3px 10px', borderRadius: 2,
+                }}>{t}</span>
+              ))}
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', color: '#aaa', marginLeft: 'auto' }}>{c.year}</span>
+            </div>
+
+            <h2 style={{
+              fontFamily: 'var(--font-display)', fontSize: 'clamp(2.2rem, 5vw, 4.5rem)',
+              color: '#e8e8e8', lineHeight: 0.9, letterSpacing: '-0.02em', marginBottom: '1.75rem',
+            }}>{c.title}</h2>
+
+            <div style={{ display: 'flex', gap: '2.5rem', marginBottom: '2rem' }}>
+              {[['Роль', c.role], ['Срок', c.duration]].map(([label, val]) => (
+                <div key={label}>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.15em', color: '#777', marginBottom: 4 }}>{label}</div>
+                  <div style={{ fontFamily: 'var(--font-sans)', fontSize: '0.85rem', color: '#c0c0c0' }}>{val}</div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ height: 1, background: `linear-gradient(90deg, ${c.accent}66, transparent)`, marginBottom: '1.75rem' }} />
+
+            <RichContent html={c.fullDesc} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.88rem', color: '#c0c0c0', lineHeight: 1.8 }} />
           </div>
 
-          <h2 style={{
-            fontFamily: 'var(--font-display)', fontSize: 'clamp(3rem, 8vw, 7rem)',
-            color: '#e8e8e8', lineHeight: 0.9, letterSpacing: '-0.02em', marginBottom: '2rem',
-          }}>{c.title}</h2>
-
-          <div style={{ display: 'flex', gap: '3rem', marginBottom: '2.5rem' }}>
-            {[['Роль', c.role], ['Срок', c.duration]].map(([label, val]) => (
-              <div key={label}>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.15em', color: '#aaa', marginBottom: 4 }}>{label}</div>
-                <div style={{ fontFamily: 'var(--font-sans)', fontSize: '0.85rem', color: '#aaa' }}>{val}</div>
-              </div>
-            ))}
-          </div>
-
-          <div style={{ height: 1, background: `linear-gradient(90deg, ${c.accent}66, transparent)`, marginBottom: '2rem' }} />
-
-          <RichContent html={c.fullDesc} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.9rem', color: '#c0c0c0', lineHeight: 1.8, maxWidth: 680, marginBottom: '2.5rem' }} />
-
-          {/* Media gallery */}
-          {c.media && c.media.length > 0 && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.15em', color: '#aaa', marginBottom: 8 }}>МЕДИА</div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 12 }}>
+          {/* RIGHT — media gallery */}
+          <div style={{ flex: 1, overflow: 'auto', padding: 'clamp(1.5rem, 2.5vw, 2.5rem)', display: 'flex', flexDirection: 'column', gap: 24 }}>
+            {c.media && c.media.length > 0 ? (
+              <>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.18em', color: '#555' }}>МЕДИА — {c.media.length}</div>
                 {c.media.map((item, i) => (
-                  <div key={i} style={{ borderRadius: 3, overflow: 'hidden', border: `1px solid ${c.accent}33`, aspectRatio: '16/9' }}>
-                    <CoverMedia src={item.url} type={item.type} hovered />
+                  <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    <div style={{ borderRadius: 4, overflow: 'hidden', border: `1px solid ${c.accent}33`, aspectRatio: '16/9', background: '#0a0a0a' }}>
+                      <CoverMedia src={item.url} type={item.type} hovered />
+                    </div>
+                    {item.caption && (
+                      <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: c.accent, marginTop: 2, flexShrink: 0 }}>↳</span>
+                        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.78rem', color: '#888', lineHeight: 1.6, margin: 0 }}>{item.caption}</p>
+                      </div>
+                    )}
                   </div>
                 ))}
+              </>
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', flexDirection: 'column', gap: 12, opacity: 0.3 }}>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.15em', color: '#555' }}>НЕТ МЕДИАФАЙЛОВ</div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </motion.div>
     </>

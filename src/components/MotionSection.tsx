@@ -22,7 +22,7 @@ type Work = {
   colors: string[]
   cover: string
   coverType: 'image' | 'video'
-  media: { url: string; type: 'image' | 'video' }[]
+  media: { url: string; type: 'image' | 'video'; caption?: string }[]
 }
 
 function WorkCard({ w, index, onOpen }: { w: Work; index: number; onOpen: (id: string) => void }) {
@@ -138,44 +138,59 @@ function WorkExpanded({ w, onClose }: { w: Work; onClose: () => void }) {
         {/* Gradient line top */}
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: w.colors.length > 0 ? `linear-gradient(90deg, ${w.colors.join(', ')})` : DEFAULT_ACCENT, zIndex: 3 }} />
 
-        <div style={{ position: 'relative', zIndex: 2, flex: 1, overflow: 'auto', padding: 'clamp(2rem, 4vw, 3.5rem)' }}>
-          <motion.button onClick={onClose} whileHover={{ color: '#f0f0f0' }}
-            style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.1em', color: '#aaa', background: 'none', border: '1px solid #2a2a2a', padding: '6px 12px', cursor: 'pointer', borderRadius: 2 }}>ESC ✕</motion.button>
+        <div style={{ position: 'relative', zIndex: 2, flex: 1, overflow: 'hidden', display: 'flex' }}>
+          {/* LEFT */}
+          <div style={{ flex: '0 0 42%', overflow: 'auto', padding: 'clamp(2rem, 3vw, 3rem)', borderRight: `1px solid ${w.accent}22` }}>
+            <motion.button onClick={onClose} whileHover={{ color: '#f0f0f0' }}
+              style={{ position: 'absolute', top: '1.5rem', right: 'calc(58% + 1rem)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.1em', color: '#aaa', background: 'none', border: '1px solid #2a2a2a', padding: '6px 12px', cursor: 'pointer', borderRadius: 2 }}>ESC ✕</motion.button>
 
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: '1.5rem' }}>
-            {w.tags.map(t => (
-              <span key={t} style={{ fontFamily: 'var(--font-mono)', fontSize: '0.88rem', letterSpacing: '0.12em', color: w.accent, border: `1px solid ${w.accent}55`, padding: '3px 10px', borderRadius: 2 }}>{t}</span>
-            ))}
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.88rem', color: '#aaa', marginLeft: 'auto' }}>{w.year}</span>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: '1.25rem' }}>
+              {w.tags.map(t => (
+                <span key={t} style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', letterSpacing: '0.12em', color: w.accent, border: `1px solid ${w.accent}55`, padding: '3px 10px', borderRadius: 2 }}>{t}</span>
+              ))}
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', color: '#aaa', marginLeft: 'auto' }}>{w.year}</span>
+            </div>
+
+            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.2rem, 5vw, 4.5rem)', color: '#e8e8e8', lineHeight: 0.9, letterSpacing: '-0.02em', marginBottom: '1.75rem' }}>{w.title}</h2>
+
+            <div style={{ display: 'flex', gap: '2.5rem', marginBottom: '2rem' }}>
+              {[['Роль', w.role], ['Срок', w.duration]].map(([label, val]) => (
+                <div key={label}>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.15em', color: '#777', marginBottom: 4 }}>{label}</div>
+                  <div style={{ fontFamily: 'var(--font-sans)', fontSize: '0.85rem', color: '#c0c0c0' }}>{val}</div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ height: 1, background: `linear-gradient(90deg, ${w.accent}66, transparent)`, marginBottom: '1.75rem' }} />
+            <RichContent html={w.fullDesc} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.88rem', color: '#c0c0c0', lineHeight: 1.8 }} />
           </div>
 
-          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.5rem, 6vw, 5.5rem)', color: '#e8e8e8', lineHeight: 0.9, letterSpacing: '-0.02em', whiteSpace: 'pre-line', marginBottom: '2rem' }}>{w.title}</h2>
-
-          <div style={{ display: 'flex', gap: '3rem', marginBottom: '2.5rem' }}>
-            {[['Роль', w.role], ['Срок', w.duration]].map(([label, val]) => (
-              <div key={label}>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.15em', color: '#aaa', marginBottom: 4 }}>{label}</div>
-                <div style={{ fontFamily: 'var(--font-sans)', fontSize: '0.85rem', color: '#aaa' }}>{val}</div>
-              </div>
-            ))}
-          </div>
-
-          <div style={{ height: 1, background: `linear-gradient(90deg, ${w.accent}66, transparent)`, marginBottom: '2rem' }} />
-
-          <RichContent html={w.fullDesc} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.9rem', color: '#c0c0c0', lineHeight: 1.8, maxWidth: 680, marginBottom: '2.5rem' }} />
-
-          {w.media && w.media.length > 0 && (
-            <div>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.15em', color: '#aaa', marginBottom: 12 }}>МЕДИА</div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 12 }}>
+          {/* RIGHT — media */}
+          <div style={{ flex: 1, overflow: 'auto', padding: 'clamp(1.5rem, 2.5vw, 2.5rem)', display: 'flex', flexDirection: 'column', gap: 24 }}>
+            {w.media && w.media.length > 0 ? (
+              <>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.18em', color: '#555' }}>МЕДИА — {w.media.length}</div>
                 {w.media.map((item, i) => (
-                  <div key={i} style={{ borderRadius: 3, overflow: 'hidden', border: `1px solid ${w.accent}33`, aspectRatio: '16/9' }}>
-                    <CoverMedia src={item.url} type={item.type} hovered />
+                  <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    <div style={{ borderRadius: 4, overflow: 'hidden', border: `1px solid ${w.accent}33`, aspectRatio: '16/9', background: '#0a0a0a' }}>
+                      <CoverMedia src={item.url} type={item.type} hovered />
+                    </div>
+                    {item.caption && (
+                      <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: w.accent, marginTop: 2, flexShrink: 0 }}>↳</span>
+                        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.78rem', color: '#888', lineHeight: 1.6, margin: 0 }}>{item.caption}</p>
+                      </div>
+                    )}
                   </div>
                 ))}
+              </>
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', opacity: 0.3 }}>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.15em', color: '#555' }}>НЕТ МЕДИАФАЙЛОВ</div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </motion.div>
     </>

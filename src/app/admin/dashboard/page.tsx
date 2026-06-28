@@ -14,7 +14,7 @@ async function uploadMediaFile(file: File): Promise<string> {
 }
 
 // ─── Types ───────────────────────────────────────────────────────────────────
-type MediaItem = { url: string; type: 'image' | 'video' }
+type MediaItem = { url: string; type: 'image' | 'video'; caption?: string }
 
 type Case = {
   id: string
@@ -479,19 +479,34 @@ function CaseForm({
           <input ref={mediaFileRef} type="file" accept="image/*,video/*" multiple style={{ display: 'none' }} onChange={handleMediaUpload} />
         </div>
         {(form.media ?? []).length > 0 && (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {(form.media ?? []).map((item, i) => (
-              <div key={i} style={{ position: 'relative', border: '1px solid #2a2a2a', borderRadius: 4, overflow: 'hidden' }}>
-                {item.type === 'video'
-                  ? <video src={item.url} style={{ width: 100, height: 70, objectFit: 'cover', display: 'block' }} />
-                  : <img src={item.url} alt="" style={{ width: 100, height: 70, objectFit: 'cover', display: 'block' }} />
-                }
-                <button type="button" onClick={() => removeMedia(i)}
-                  style={{ position: 'absolute', top: 2, right: 2, width: 18, height: 18, background: 'rgba(0,0,0,0.7)', border: 'none', borderRadius: '50%', color: '#fff', cursor: 'pointer', fontSize: 10, lineHeight: '18px', textAlign: 'center', padding: 0 }}>
-                  ✕
-                </button>
-                <div style={{ fontSize: 9, color: '#555', fontFamily: 'monospace', padding: '2px 4px', background: '#0a0a0a' }}>
-                  {item.type === 'video' ? 'VIDEO' : 'IMG'}
+              <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', background: '#111', border: '1px solid #1e1e1e', borderRadius: 4, padding: 8 }}>
+                <div style={{ position: 'relative', flexShrink: 0 }}>
+                  {item.type === 'video'
+                    ? <video src={item.url} style={{ width: 120, height: 72, objectFit: 'cover', display: 'block', borderRadius: 3 }} />
+                    : <img src={item.url} alt="" style={{ width: 120, height: 72, objectFit: 'cover', display: 'block', borderRadius: 3 }} />
+                  }
+                  <div style={{ position: 'absolute', top: 3, left: 3, fontSize: 8, color: '#888', fontFamily: 'monospace', background: 'rgba(0,0,0,0.7)', padding: '1px 4px', borderRadius: 2 }}>
+                    {item.type === 'video' ? 'VIDEO' : 'IMG'}
+                  </div>
+                  <button type="button" onClick={() => removeMedia(i)}
+                    style={{ position: 'absolute', top: 3, right: 3, width: 18, height: 18, background: 'rgba(0,0,0,0.7)', border: 'none', borderRadius: '50%', color: '#fff', cursor: 'pointer', fontSize: 10, lineHeight: '18px', textAlign: 'center', padding: 0 }}>
+                    ✕
+                  </button>
+                </div>
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  <label style={{ ...S.label, marginBottom: 0 }}>ПОДПИСЬ / СНОСКА</label>
+                  <input
+                    value={item.caption ?? ''}
+                    onChange={e => {
+                      const updated = [...(form.media ?? [])]
+                      updated[i] = { ...updated[i], caption: e.target.value }
+                      set('media', updated)
+                    }}
+                    placeholder="Описание к этому медиафайлу..."
+                    style={{ ...S.input, fontSize: 12, padding: '6px 10px' }}
+                  />
                 </div>
               </div>
             ))}
