@@ -215,7 +215,7 @@ export default function MobileCases({ sectionRef }: { sectionRef: React.RefObjec
       ref={sectionRef}
       id="web"
       style={{
-        width: '100%', minHeight: '100svh', boxSizing: 'border-box', background: '#0d0d0d', boxSizing: 'border-box',
+        width: '100%', minHeight: '100svh', boxSizing: 'border-box', background: '#0d0d0d',
         padding: '2rem 1.25rem calc(80px + env(safe-area-inset-bottom))',
         flexShrink: 0,
       }}
