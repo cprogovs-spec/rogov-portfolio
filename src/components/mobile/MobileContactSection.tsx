@@ -134,6 +134,12 @@ export default function MobileContactSection({ sectionRef }: { sectionRef: React
   const [links, setLinks] = useState<Link[]>(DEFAULT_LINKS)
 
   useEffect(() => {
+    const handler = () => setShowForm(true)
+    window.addEventListener('open-contact-form', handler)
+    return () => window.removeEventListener('open-contact-form', handler)
+  }, [])
+
+  useEffect(() => {
     supabase.from('settings').select('*').eq('id', 1).single()
       .then(({ data }) => {
         if (!data) return

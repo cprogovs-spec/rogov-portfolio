@@ -65,8 +65,8 @@ export default function MobileHero({ onScrollDown }: { onScrollDown: () => void 
         padding: '0 1.25rem 5rem',
         display: 'flex', flexDirection: 'column', gap: 16,
       }}>
-        <motion.a
-          href="#contact"
+        <motion.button
+          onClick={() => window.dispatchEvent(new CustomEvent('open-contact-form'))}
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 1.6 }}
           whileTap={{ scale: 0.97 }}
@@ -77,11 +77,12 @@ export default function MobileHero({ onScrollDown }: { onScrollDown: () => void 
             border: '1px solid rgba(107,147,92,0.35)',
             borderRadius: 3,
             fontFamily: 'var(--font-mono)', fontSize: '0.7rem',
-            letterSpacing: '0.14em', color: '#8cd66e', textDecoration: 'none', cursor: 'pointer',
+            letterSpacing: '0.14em', color: '#8cd66e', cursor: 'pointer',
+            width: '100%',
           }}
         >
           ОФОРМИТЬ ЗАЯВКУ ↵
-        </motion.a>
+        </motion.button>
 
         <motion.button
           onClick={onScrollDown}
