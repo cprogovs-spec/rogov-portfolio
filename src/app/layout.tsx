@@ -50,6 +50,7 @@ export default async function RootLayout({
   return (
     <html lang="ru" className="h-full antialiased" suppressHydrationWarning>
       <head>
+        <meta name="yandex-verification" content="55d9c97c614b8557" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
