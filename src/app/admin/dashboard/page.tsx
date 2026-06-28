@@ -927,9 +927,123 @@ function ContactTab() {
   )
 }
 
+// ─── SEO Tab ─────────────────────────────────────────────────────────────────
+function SeoTab() {
+  const [form, setForm] = useState({
+    meta_title: '',
+    meta_description: '',
+    og_title: '',
+    og_description: '',
+    og_image: '',
+    canonical_url: '',
+    robots: 'index, follow',
+    ga4_id: '',
+    yandex_metrika_id: '',
+  })
+  const [saving, setSaving] = useState(false)
+  const [saved, setSaved] = useState(false)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    supabase.from('settings').select('*').eq('id', 1).single().then(({ data }) => {
+      if (!data) return
+      setForm({
+        meta_title: data.meta_title ?? '',
+        meta_description: data.meta_description ?? '',
+        og_title: data.og_title ?? '',
+        og_description: data.og_description ?? '',
+        og_image: data.og_image ?? '',
+        canonical_url: data.canonical_url ?? '',
+        robots: data.robots ?? 'index, follow',
+        ga4_id: data.ga4_id ?? '',
+        yandex_metrika_id: data.yandex_metrika_id ?? '',
+      })
+    })
+  }, [])
+
+  function set(field: string, val: string) {
+    setForm(f => ({ ...f, [field]: val }))
+  }
+
+  async function handleSave() {
+    setSaving(true); setError(''); setSaved(false)
+    const { error: err } = await supabase.from('settings').upsert({ id: 1, ...form })
+    setSaving(false)
+    if (err) { setError(err.message); return }
+    setSaved(true)
+    setTimeout(() => setSaved(false), 2000)
+  }
+
+  const fieldStyle: React.CSSProperties = { marginBottom: 16 }
+
+  return (
+    <div>
+      <div style={S.formPanel}>
+        <h3 style={{ color: '#6B935C', marginTop: 0, marginBottom: 20, fontFamily: 'monospace', fontSize: 13 }}>МЕТАТЕГИ</h3>
+
+        <div style={S.formGrid}>
+          <div style={fieldStyle}>
+            <label style={S.label}>META TITLE</label>
+            <input style={S.input} value={form.meta_title} onChange={e => set('meta_title', e.target.value)} placeholder="Рогов — Дизайнер" />
+          </div>
+          <div style={fieldStyle}>
+            <label style={S.label}>ROBOTS</label>
+            <input style={S.input} value={form.robots} onChange={e => set('robots', e.target.value)} placeholder="index, follow" />
+          </div>
+        </div>
+
+        <div style={fieldStyle}>
+          <label style={S.label}>META DESCRIPTION</label>
+          <textarea style={{ ...S.textarea, minHeight: 60 }} value={form.meta_description} onChange={e => set('meta_description', e.target.value)} placeholder="Описание сайта для поисковиков" />
+        </div>
+
+        <div style={fieldStyle}>
+          <label style={S.label}>CANONICAL URL</label>
+          <input style={S.input} value={form.canonical_url} onChange={e => set('canonical_url', e.target.value)} placeholder="https://byrogov.ru" />
+        </div>
+
+        <h3 style={{ color: '#6B935C', margin: '24px 0 16px', fontFamily: 'monospace', fontSize: 13 }}>OPEN GRAPH (соцсети)</h3>
+
+        <div style={fieldStyle}>
+          <label style={S.label}>OG:TITLE</label>
+          <input style={S.input} value={form.og_title} onChange={e => set('og_title', e.target.value)} placeholder="Совпадает с meta title если пусто" />
+        </div>
+
+        <div style={fieldStyle}>
+          <label style={S.label}>OG:DESCRIPTION</label>
+          <textarea style={{ ...S.textarea, minHeight: 60 }} value={form.og_description} onChange={e => set('og_description', e.target.value)} placeholder="Описание для превью в соцсетях" />
+        </div>
+
+        <div style={fieldStyle}>
+          <label style={S.label}>OG:IMAGE (URL картинки для превью)</label>
+          <input style={S.input} value={form.og_image} onChange={e => set('og_image', e.target.value)} placeholder="https://..." />
+        </div>
+
+        <h3 style={{ color: '#6B935C', margin: '24px 0 16px', fontFamily: 'monospace', fontSize: 13 }}>АНАЛИТИКА</h3>
+
+        <div style={S.formGrid}>
+          <div style={fieldStyle}>
+            <label style={S.label}>GOOGLE ANALYTICS 4 — ID (G-XXXXXXXXXX)</label>
+            <input style={S.input} value={form.ga4_id} onChange={e => set('ga4_id', e.target.value)} placeholder="G-XXXXXXXXXX" />
+          </div>
+          <div style={fieldStyle}>
+            <label style={S.label}>ЯНДЕКС.МЕТРИКА — НОМЕР СЧЁТЧИКА</label>
+            <input style={S.input} value={form.yandex_metrika_id} onChange={e => set('yandex_metrika_id', e.target.value)} placeholder="12345678" />
+          </div>
+        </div>
+
+        {error && <p style={{ color: '#c0392b', fontSize: 12, marginBottom: 12 }}>{error}</p>}
+        <button style={{ ...S.btn, opacity: saving ? 0.6 : 1 }} onClick={handleSave} disabled={saving}>
+          {saving ? 'СОХРАНЕНИЕ...' : saved ? '✓ СОХРАНЕНО' : 'СОХРАНИТЬ'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
 // ─── Dashboard Page ───────────────────────────────────────────────────────────
 export default function DashboardPage() {
-  const [tab, setTab] = useState<'cases' | 'articles' | 'contact'>('cases')
+  const [tab, setTab] = useState<'cases' | 'articles' | 'contact' | 'seo'>('cases')
   const router = useRouter()
 
   async function handleLogout() {
@@ -948,10 +1062,12 @@ export default function DashboardPage() {
           <button style={S.tab(tab === 'cases')} onClick={() => setTab('cases')}>КЕЙСЫ</button>
           <button style={S.tab(tab === 'articles')} onClick={() => setTab('articles')}>СТАТЬИ</button>
           <button style={S.tab(tab === 'contact')} onClick={() => setTab('contact')}>КОНТАКТЫ</button>
+          <button style={S.tab(tab === 'seo')} onClick={() => setTab('seo')}>SEO / АНАЛИТИКА</button>
         </div>
         {tab === 'cases' && <CasesTab />}
         {tab === 'articles' && <ArticlesTab />}
         {tab === 'contact' && <ContactTab />}
+        {tab === 'seo' && <SeoTab />}
       </div>
     </div>
   )
