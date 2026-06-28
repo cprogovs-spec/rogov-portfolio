@@ -943,6 +943,7 @@ function SeoTab() {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState('')
+  const [uploading, setUploading] = useState(false)
 
   useEffect(() => {
     supabase.from('settings').select('*').eq('id', 1).single().then(({ data }) => {
@@ -963,6 +964,18 @@ function SeoTab() {
 
   function set(field: string, val: string) {
     setForm(f => ({ ...f, [field]: val }))
+  }
+
+  async function handleOgImageUpload(file: File) {
+    setUploading(true)
+    try {
+      const url = await uploadMediaFile(file)
+      set('og_image', url)
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Ошибка загрузки')
+    } finally {
+      setUploading(false)
+    }
   }
 
   async function handleSave() {
@@ -1015,8 +1028,18 @@ function SeoTab() {
         </div>
 
         <div style={fieldStyle}>
-          <label style={S.label}>OG:IMAGE (URL картинки для превью)</label>
-          <input style={S.input} value={form.og_image} onChange={e => set('og_image', e.target.value)} placeholder="https://..." />
+          <label style={S.label}>OG:IMAGE (картинка для превью в соцсетях, 1200×630px)</label>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            <input style={{ ...S.input, flex: 1 }} value={form.og_image} onChange={e => set('og_image', e.target.value)} placeholder="https://..." />
+            <label style={{ ...S.btnSmall, cursor: 'pointer', whiteSpace: 'nowrap', marginRight: 0, opacity: uploading ? 0.5 : 1 }}>
+              {uploading ? 'ЗАГРУЗКА...' : '↑ ФАЙЛ'}
+              <input type="file" accept="image/*" style={{ display: 'none' }} disabled={uploading}
+                onChange={e => { const f = e.target.files?.[0]; if (f) handleOgImageUpload(f) }} />
+            </label>
+          </div>
+          {form.og_image && (
+            <img src={form.og_image} alt="OG preview" style={{ marginTop: 8, maxWidth: 240, borderRadius: 4, border: '1px solid #2a2a2a' }} />
+          )}
         </div>
 
         <h3 style={{ color: '#6B935C', margin: '24px 0 16px', fontFamily: 'monospace', fontSize: 13 }}>АНАЛИТИКА</h3>
