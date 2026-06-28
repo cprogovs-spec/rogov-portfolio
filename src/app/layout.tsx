@@ -33,6 +33,13 @@ export async function generateMetadata(): Promise<Metadata> {
     keywords: 'веб-дизайнер, UX/UI дизайн, создание сайтов, креативы для соцсетей, нейросети в дизайне, моушен дизайн, веб-мастер, дизайн интерфейсов, Сергей Рогов',
     robots: s?.robots || 'index, follow',
     verification: { yandex: '55d9c97c614b8557' },
+    icons: {
+      icon: [
+        { url: '/favicon.ico', sizes: 'any' },
+        { url: '/favicon-512.png', sizes: '512x512', type: 'image/png' },
+      ],
+      apple: '/apple-touch-icon.png',
+    },
     alternates: { canonical },
     openGraph: {
       title: ogTitle,
