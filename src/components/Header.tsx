@@ -26,9 +26,10 @@ export default function Header() {
         </motion.div>
 
         {/* cta */}
-        <motion.a
-          href="#contacts"
+        <motion.button
+          onClick={() => window.dispatchEvent(new CustomEvent('open-contact-form'))}
           className="flex items-center gap-2 cursor-pointer"
+          style={{ background: 'none', border: 'none', padding: 0 }}
           style={{
             fontFamily: 'var(--font-mono)',
             fontSize: '0.7rem',
@@ -43,7 +44,7 @@ export default function Header() {
         >
           ОФОРМИТЬ ЗАЯВКУ
           <span style={{ fontSize: '1rem' }}>↵</span>
-        </motion.a>
+        </motion.button>
 
         {/* clock */}
         <WeatherClock />

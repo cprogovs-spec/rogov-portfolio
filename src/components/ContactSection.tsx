@@ -220,6 +220,12 @@ export default function ContactSection() {
   const { services, links, subheading } = useContactSettings()
 
   useEffect(() => {
+    const handler = () => setFormOpen(true)
+    window.addEventListener('open-contact-form', handler)
+    return () => window.removeEventListener('open-contact-form', handler)
+  }, [])
+
+  useEffect(() => {
     const el = scrollRef.current
     if (!el) return
 
