@@ -254,8 +254,26 @@ export default function ContactSection() {
       }}>
         {/* Section label — animates on scroll */}
         <div style={{ marginBottom: '1.5rem' }}>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.18em', color: ACCENT, marginBottom: 6 }}>
-            04 / КОНТАКТЫ
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.18em', color: ACCENT }}>
+              04 / КОНТАКТЫ
+            </div>
+            <a href="/about" style={{
+              display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none',
+              fontFamily: 'var(--font-mono)', fontSize: '0.55rem', letterSpacing: '0.14em',
+              color: '#444', border: '1px solid #1a1a1a', borderRadius: 3,
+              padding: '0.35rem 0.7rem',
+              transition: 'all 0.2s',
+            }}
+              onMouseEnter={e => { e.currentTarget.style.color = ACCENT_BRIGHT; e.currentTarget.style.borderColor = ACCENT + '55' }}
+              onMouseLeave={e => { e.currentTarget.style.color = '#444'; e.currentTarget.style.borderColor = '#1a1a1a' }}
+            >
+              ОБО МНЕ
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ opacity: 0.6 }}>
+                <rect x="1" y="1" width="12" height="12" rx="2" stroke="currentColor" strokeWidth="1.2"/>
+                <path d="M7 4.5L7 9.5M4.5 7H9.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+              </svg>
+            </a>
           </div>
           <AnimatePresence mode="wait">
             <motion.h2

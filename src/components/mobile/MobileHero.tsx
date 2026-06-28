@@ -41,7 +41,7 @@ export default function MobileHero({ onScrollDown }: { onScrollDown: () => void 
         padding: '0 1rem',
       }}>
         <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-          <RogovTitle fontSize="clamp(2.4rem, 13.5vw, 4rem)" />
+          <RogovTitle fontSize="clamp(2.4rem, 13.5vw, 4rem)" baseColor="#e8e8e8" />
         </div>
 
         <motion.p

@@ -17,7 +17,8 @@ const BASE_COLOR = '#3a3a3a'
 const NEON_COLOR = '#8cd66e'
 const NEON_SHADOW = '0 0 4px rgba(140,214,110,1), 0 0 12px rgba(107,147,92,0.9), 0 0 28px rgba(107,147,92,0.6), 0 0 50px rgba(107,147,92,0.3)'
 
-export default function RogovTitle({ fontSize }: { fontSize?: string } = {}) {
+export default function RogovTitle({ fontSize, baseColor: baseColorProp }: { fontSize?: string; baseColor?: string } = {}) {
+  const BASE = baseColorProp ?? BASE_COLOR
   const randomLetter = () => LETTERS_RU[Math.floor(Math.random() * LETTERS_RU.length)]
 
   const [display, setDisplay] = useState(WORD.split('').map(() => randomLetter()))
@@ -41,7 +42,7 @@ export default function RogovTitle({ fontSize }: { fontSize?: string } = {}) {
       ctrls[i].start({ color: NEON_COLOR, textShadow: NEON_SHADOW, transition: { duration: 0.07 } })
       setTimeout(() => {
         if (!mounted.current) return
-        ctrls[i].start({ color: BASE_COLOR, textShadow: '0 0 0px transparent', transition: { duration: fadeS, ease: 'easeOut' } })
+        ctrls[i].start({ color: BASE, textShadow: '0 0 0px transparent', transition: { duration: fadeS, ease: 'easeOut' } })
       }, holdMs)
       await new Promise(r => setTimeout(r, perLetter))
     }
@@ -142,7 +143,7 @@ export default function RogovTitle({ fontSize }: { fontSize?: string } = {}) {
               style={{
                 fontFamily: 'var(--font-display)',
                 fontSize: fontSize ?? 'clamp(5rem, 17vw, 17rem)',
-                color: BASE_COLOR,
+                color: BASE,
                 display: 'inline-block',
                 lineHeight: 1,
                 userSelect: 'none',
