@@ -18,12 +18,11 @@ const NEON_COLOR = '#8cd66e'
 const NEON_SHADOW = '0 0 4px rgba(140,214,110,1), 0 0 12px rgba(107,147,92,0.9), 0 0 28px rgba(107,147,92,0.6), 0 0 50px rgba(107,147,92,0.3)'
 
 export default function RogovTitle({ fontSize }: { fontSize?: string } = {}) {
-  // fontSize prop allows mobile override
-  const [display, setDisplay] = useState(WORD.split('').map(() => ''))
-  const [visible, setVisible] = useState(false)
-  const scrambling = useRef(false)
+  const randomLetter = () => LETTERS_RU[Math.floor(Math.random() * LETTERS_RU.length)]
 
-  // Fixed count — РОГОВ has 5 letters. Rules of Hooks require unconditional calls.
+  const [display, setDisplay] = useState(WORD.split('').map(() => randomLetter()))
+  const [visible, setVisible] = useState(false)
+
   const c0 = useAnimation()
   const c1 = useAnimation()
   const c2 = useAnimation()
@@ -31,61 +30,62 @@ export default function RogovTitle({ fontSize }: { fontSize?: string } = {}) {
   const c4 = useAnimation()
   const ctrls = [c0, c1, c2, c3, c4]
 
-  const randomLetter = () => LETTERS_RU[Math.floor(Math.random() * LETTERS_RU.length)]
-
-  const runScramble = () => {
-    if (scrambling.current) return
-    scrambling.current = true
-    const letters = WORD.split('')
-    const stepMs = SCRAMBLE_DURATION / (letters.length * SCRAMBLE_STEPS)
-    let step = 0
-    const total = letters.length * SCRAMBLE_STEPS
-    const id = setInterval(() => {
-      const resolved = Math.floor(step / SCRAMBLE_STEPS)
-      setDisplay(letters.map((ch, i) => (i < resolved ? ch : randomLetter())))
-      step++
-      if (step >= total) {
-        clearInterval(id)
-        setDisplay(letters)
-        scrambling.current = false
-      }
-    }, stepMs)
-  }
-
   const mounted = useRef(false)
 
   const runNeon = async () => {
     const perLetter = 130
     const holdMs = 200
     const fadeS = 0.4
-
     for (let i = 0; i < ctrls.length; i++) {
       if (!mounted.current) return
-      ctrls[i].start({
-        color: NEON_COLOR,
-        textShadow: NEON_SHADOW,
-        transition: { duration: 0.07 },
-      })
-      const fadeId = setTimeout(() => {
+      ctrls[i].start({ color: NEON_COLOR, textShadow: NEON_SHADOW, transition: { duration: 0.07 } })
+      setTimeout(() => {
         if (!mounted.current) return
-        ctrls[i].start({
-          color: BASE_COLOR,
-          textShadow: '0 0 0px transparent',
-          transition: { duration: fadeS, ease: 'easeOut' },
-        })
+        ctrls[i].start({ color: BASE_COLOR, textShadow: '0 0 0px transparent', transition: { duration: fadeS, ease: 'easeOut' } })
       }, holdMs)
       await new Promise(r => setTimeout(r, perLetter))
-      void fadeId
     }
   }
 
   useEffect(() => {
     mounted.current = true
-    const totalRevealTime = 500 + WORD.length * 70 + 700
     setVisible(true)
 
+    const letters = WORD.split('')
+    const resolved = letters.map(() => false)
+
+    // Continuously scramble unresolved letters
+    const scrambleId = setInterval(() => {
+      if (!mounted.current) return
+      setDisplay(letters.map((ch, i) => (resolved[i] ? ch : randomLetter())))
+    }, 55)
+
+    // For each letter: flash neon as it enters, resolve when fully visible
+    letters.forEach((ch, i) => {
+      const enterAt = (0.5 + i * 0.07) * 1000
+      const resolveAt = (0.5 + i * 0.07 + 0.7) * 1000 + 80
+
+      // Go neon as letter starts sliding up
+      setTimeout(() => {
+        if (!mounted.current) return
+        ctrls[i].start({ color: NEON_COLOR, textShadow: NEON_SHADOW, transition: { duration: 0.08 } })
+      }, enterAt)
+
+      // Resolve to real letter and fade to base color
+      setTimeout(() => {
+        if (!mounted.current) return
+        resolved[i] = true
+        setDisplay(prev => prev.map((c, j) => (j === i ? ch : c)))
+        ctrls[i].start({ color: BASE_COLOR, textShadow: '0 0 0px transparent', transition: { duration: 0.5, ease: 'easeOut' } })
+      }, resolveAt)
+    })
+
+    // Stop scramble after last letter resolves
+    const lastResolve = (0.5 + (letters.length - 1) * 0.07 + 0.7) * 1000 + 200
+    const stopScramble = setTimeout(() => clearInterval(scrambleId), lastResolve)
+
+    // Periodic neon pulse
     let repeatId: ReturnType<typeof setInterval>
-    const scrambleT = setTimeout(runScramble, totalRevealTime + 100)
     const neonT = setTimeout(() => {
       runNeon()
       repeatId = setInterval(runNeon, NEON_REPEAT_INTERVAL)
@@ -93,7 +93,8 @@ export default function RogovTitle({ fontSize }: { fontSize?: string } = {}) {
 
     return () => {
       mounted.current = false
-      clearTimeout(scrambleT)
+      clearInterval(scrambleId)
+      clearTimeout(stopScramble)
       clearTimeout(neonT)
       clearInterval(repeatId)
     }
