@@ -819,9 +819,117 @@ function ArticlesTab() {
   )
 }
 
+// ─── Contact Tab ─────────────────────────────────────────────────────────────
+type ServiceItem = { title: string; desc: string; price: string }
+type LinkItem = { label: string; value: string; href: string }
+
+function ContactTab() {
+  const [subheading, setSubheading] = useState('')
+  const [services, setServices] = useState<ServiceItem[]>([])
+  const [links, setLinks] = useState<LinkItem[]>([])
+  const [saving, setSaving] = useState(false)
+  const [saved, setSaved] = useState(false)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    supabase.from('settings').select('*').eq('id', 1).single().then(({ data }) => {
+      if (!data) return
+      setSubheading(data.subheading ?? '')
+      setServices(Array.isArray(data.services) ? data.services : [])
+      setLinks(Array.isArray(data.links) ? data.links : [])
+    })
+  }, [])
+
+  function updateService(i: number, field: keyof ServiceItem, val: string) {
+    setServices(s => s.map((item, idx) => idx === i ? { ...item, [field]: val } : item))
+  }
+  function addService() { setServices(s => [...s, { title: '', desc: '', price: '' }]) }
+  function removeService(i: number) { setServices(s => s.filter((_, idx) => idx !== i)) }
+
+  function updateLink(i: number, field: keyof LinkItem, val: string) {
+    setLinks(l => l.map((item, idx) => idx === i ? { ...item, [field]: val } : item))
+  }
+  function addLink() { setLinks(l => [...l, { label: '', value: '', href: '' }]) }
+  function removeLink(i: number) { setLinks(l => l.filter((_, idx) => idx !== i)) }
+
+  async function handleSave() {
+    setSaving(true); setError(''); setSaved(false)
+    const { error: err } = await supabase.from('settings')
+      .upsert({ id: 1, subheading, services, links })
+    setSaving(false)
+    if (err) { setError(err.message); return }
+    setSaved(true)
+    setTimeout(() => setSaved(false), 2000)
+  }
+
+  const rowStyle: React.CSSProperties = {
+    display: 'grid', gap: 8, alignItems: 'center',
+    background: '#111', border: '1px solid #1e1e1e',
+    borderRadius: 4, padding: '10px 12px', marginBottom: 8,
+  }
+
+  return (
+    <div>
+      <div style={S.formPanel}>
+        <h3 style={{ color: '#6B935C', marginTop: 0, marginBottom: 20, fontFamily: 'monospace', fontSize: 13 }}>СТРАНИЦА КОНТАКТОВ</h3>
+
+        {/* Subheading */}
+        <div style={S.formField}>
+          <label style={S.label}>ПОДЗАГОЛОВОК (текст под кнопкой)</label>
+          <textarea style={{ ...S.textarea, minHeight: 60 }} value={subheading}
+            onChange={e => setSubheading(e.target.value)} />
+        </div>
+
+        {/* Services */}
+        <div style={{ ...S.formField, marginTop: 24 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+            <label style={{ ...S.label, marginBottom: 0 }}>УСЛУГИ И ЦЕНЫ</label>
+            <button style={S.btnSmall} onClick={addService}>+ Добавить</button>
+          </div>
+          {services.map((s, i) => (
+            <div key={i} style={{ ...rowStyle, gridTemplateColumns: '1fr 2fr 1fr auto' }}>
+              <input style={S.input} placeholder="Название" value={s.title}
+                onChange={e => updateService(i, 'title', e.target.value)} />
+              <input style={S.input} placeholder="Описание" value={s.desc}
+                onChange={e => updateService(i, 'desc', e.target.value)} />
+              <input style={S.input} placeholder="Цена" value={s.price}
+                onChange={e => updateService(i, 'price', e.target.value)} />
+              <button style={S.btnDanger} onClick={() => removeService(i)}>✕</button>
+            </div>
+          ))}
+        </div>
+
+        {/* Links */}
+        <div style={{ ...S.formField, marginTop: 24 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+            <label style={{ ...S.label, marginBottom: 0 }}>КОНТАКТЫ И ССЫЛКИ</label>
+            <button style={S.btnSmall} onClick={addLink}>+ Добавить</button>
+          </div>
+          {links.map((l, i) => (
+            <div key={i} style={{ ...rowStyle, gridTemplateColumns: '1fr 1fr 2fr auto' }}>
+              <input style={S.input} placeholder="Метка" value={l.label}
+                onChange={e => updateLink(i, 'label', e.target.value)} />
+              <input style={S.input} placeholder="Текст" value={l.value}
+                onChange={e => updateLink(i, 'value', e.target.value)} />
+              <input style={S.input} placeholder="https://..." value={l.href}
+                onChange={e => updateLink(i, 'href', e.target.value)} />
+              <button style={S.btnDanger} onClick={() => removeLink(i)}>✕</button>
+            </div>
+          ))}
+        </div>
+
+        {error && <p style={{ color: '#c0392b', fontSize: 12, marginBottom: 12 }}>{error}</p>}
+        <button style={{ ...S.btn, opacity: saving ? 0.6 : 1 }} onClick={handleSave} disabled={saving}>
+          {saving ? 'СОХРАНЕНИЕ...' : saved ? '✓ СОХРАНЕНО' : 'СОХРАНИТЬ'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
 // ─── Dashboard Page ───────────────────────────────────────────────────────────
 export default function DashboardPage() {
-  const [tab, setTab] = useState<'cases' | 'articles'>('cases')
+  const [tab, setTab] = useState<'cases' | 'articles' | 'contact'>('cases')
   const router = useRouter()
 
   async function handleLogout() {
@@ -839,8 +947,11 @@ export default function DashboardPage() {
         <div style={S.tabs}>
           <button style={S.tab(tab === 'cases')} onClick={() => setTab('cases')}>КЕЙСЫ</button>
           <button style={S.tab(tab === 'articles')} onClick={() => setTab('articles')}>СТАТЬИ</button>
+          <button style={S.tab(tab === 'contact')} onClick={() => setTab('contact')}>КОНТАКТЫ</button>
         </div>
-        {tab === 'cases' ? <CasesTab /> : <ArticlesTab />}
+        {tab === 'cases' && <CasesTab />}
+        {tab === 'articles' && <ArticlesTab />}
+        {tab === 'contact' && <ContactTab />}
       </div>
     </div>
   )

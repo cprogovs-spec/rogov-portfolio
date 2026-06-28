@@ -37,3 +37,25 @@ create table if not exists public.articles (
 
 alter table public.cases disable row level security;
 alter table public.articles disable row level security;
+
+create table if not exists public.settings (
+  id int primary key default 1,
+  heading text default 'ДАВАЙТЕ РАБОТАТЬ',
+  subheading text default 'Обсудим проект — расскажите задачу',
+  services jsonb default '[
+    {"title":"UX/UI Дизайн","desc":"Продуктовые интерфейсы, мобильные приложения, веб-платформы","price":"от 80 000 ₽"},
+    {"title":"Брендинг","desc":"Фирменный стиль, логотип, гайдлайн","price":"от 60 000 ₽"},
+    {"title":"Motion Design","desc":"Анимации для UI, видеоролики, шаблоны для соцсетей","price":"от 40 000 ₽"},
+    {"title":"AI-интеграция","desc":"Автоматизация дизайн-процессов, AI Art Direction","price":"по запросу"}
+  ]'::jsonb,
+  links jsonb default '[
+    {"label":"Telegram","value":"@rogovdesign","href":"https://t.me/rogovdesign"},
+    {"label":"Email","value":"hello@rogov.design","href":"mailto:hello@rogov.design"},
+    {"label":"Behance","value":"behance.net/rogov","href":"https://behance.net"}
+  ]'::jsonb
+);
+
+-- Insert default row if not exists
+insert into public.settings (id) values (1) on conflict (id) do nothing;
+
+alter table public.settings disable row level security;

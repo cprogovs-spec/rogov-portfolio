@@ -4,22 +4,44 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import GridBackground from './GridBackground'
+import { supabase } from '@/lib/supabase'
 
 const ACCENT = '#6B935C'
 const ACCENT_BRIGHT = '#8cd66e'
 
-const SERVICES = [
+type Service = { title: string; desc: string; price: string }
+type Link = { label: string; value: string; href: string }
+
+const DEFAULT_SERVICES: Service[] = [
   { title: 'UX/UI Дизайн', desc: 'Продуктовые интерфейсы, мобильные приложения, веб-платформы', price: 'от 80 000 ₽' },
   { title: 'Брендинг', desc: 'Фирменный стиль, логотип, гайдлайн', price: 'от 60 000 ₽' },
   { title: 'Motion Design', desc: 'Анимации для UI, видеоролики, шаблоны для соцсетей', price: 'от 40 000 ₽' },
   { title: 'AI-интеграция', desc: 'Автоматизация дизайн-процессов, промпт-системы, AI Art Direction', price: 'по запросу' },
 ]
 
-const LINKS = [
+const DEFAULT_LINKS: Link[] = [
   { label: 'Telegram', value: '@rogovdesign', href: 'https://t.me/rogovdesign' },
   { label: 'Email', value: 'hello@rogov.design', href: 'mailto:hello@rogov.design' },
   { label: 'Behance', value: 'behance.net/rogov', href: 'https://behance.net' },
 ]
+
+function useContactSettings() {
+  const [services, setServices] = useState<Service[]>(DEFAULT_SERVICES)
+  const [links, setLinks] = useState<Link[]>(DEFAULT_LINKS)
+  const [subheading, setSubheading] = useState('Проектирую интерфейсы, которые работают — визуально и стратегически. Открыт для новых проектов.')
+
+  useEffect(() => {
+    supabase.from('settings').select('*').eq('id', 1).single()
+      .then(({ data }) => {
+        if (!data) return
+        if (Array.isArray(data.services) && data.services.length > 0) setServices(data.services)
+        if (Array.isArray(data.links) && data.links.length > 0) setLinks(data.links)
+        if (data.subheading) setSubheading(data.subheading)
+      })
+  }, [])
+
+  return { services, links, subheading }
+}
 
 // Sections that drive left-panel content
 const SCROLL_SECTIONS = [
@@ -184,6 +206,7 @@ export default function ContactSection() {
   const [activeSection, setActiveSection] = useState(0)
   const scrollRef = useRef<HTMLDivElement>(null)
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([])
+  const { services, links, subheading } = useContactSettings()
 
   useEffect(() => {
     const el = scrollRef.current
@@ -335,7 +358,7 @@ export default function ContactSection() {
               fontFamily: 'var(--font-sans)', fontSize: '1.15rem',
               color: '#888', lineHeight: 1.65, marginBottom: '3rem', maxWidth: 380,
             }}>
-              Проектирую интерфейсы, которые работают — визуально и стратегически. Открыт для новых проектов.
+              {subheading}
             </p>
 
             <motion.button
@@ -358,7 +381,7 @@ export default function ContactSection() {
 
             {/* Quick links */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-              {LINKS.map((link, i) => (
+              {links.map((link, i) => (
                 <motion.a
                   key={link.label}
                   href={link.href}
@@ -403,7 +426,7 @@ export default function ContactSection() {
             ЧТО ДЕЛАЮ
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-            {SERVICES.map((s, i) => (
+            {services.map((s, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 12 }}

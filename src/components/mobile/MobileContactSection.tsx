@@ -1,20 +1,24 @@
 'use client'
 
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import GridBackground from '@/components/GridBackground'
+import { supabase } from '@/lib/supabase'
 
 const ACCENT = '#6B935C'
 const ACCENT_BRIGHT = '#8cd66e'
 
-const SERVICES = [
+type Service = { title: string; desc: string; price: string }
+type Link = { label: string; value: string; href: string }
+
+const DEFAULT_SERVICES: Service[] = [
   { title: 'UX/UI Дизайн', desc: 'Продуктовые интерфейсы, мобильные приложения, веб-платформы', price: 'от 80 000 ₽' },
   { title: 'Брендинг', desc: 'Фирменный стиль, логотип, гайдлайн', price: 'от 60 000 ₽' },
   { title: 'Motion Design', desc: 'Анимации для UI, видеоролики, шаблоны для соцсетей', price: 'от 40 000 ₽' },
   { title: 'AI-интеграция', desc: 'Автоматизация дизайн-процессов, AI Art Direction', price: 'по запросу' },
 ]
 
-const LINKS = [
+const DEFAULT_LINKS: Link[] = [
   { label: 'Telegram', value: '@rogovdesign', href: 'https://t.me/rogovdesign' },
   { label: 'Email', value: 'hello@rogov.design', href: 'mailto:hello@rogov.design' },
   { label: 'Behance', value: 'behance.net/rogov', href: 'https://behance.net' },
@@ -112,6 +116,17 @@ function MobileForm({ onClose }: { onClose: () => void }) {
 
 export default function MobileContactSection({ sectionRef }: { sectionRef: React.RefObject<HTMLDivElement | null> }) {
   const [showForm, setShowForm] = useState(false)
+  const [services, setServices] = useState<Service[]>(DEFAULT_SERVICES)
+  const [links, setLinks] = useState<Link[]>(DEFAULT_LINKS)
+
+  useEffect(() => {
+    supabase.from('settings').select('*').eq('id', 1).single()
+      .then(({ data }) => {
+        if (!data) return
+        if (Array.isArray(data.services) && data.services.length > 0) setServices(data.services)
+        if (Array.isArray(data.links) && data.links.length > 0) setLinks(data.links)
+      })
+  }, [])
 
   return (
     <div ref={sectionRef} id="contact" style={{ width: '100%', minHeight: '100svh', background: '#0d0d0d', position: 'relative', overflow: 'hidden', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
@@ -127,7 +142,7 @@ export default function MobileContactSection({ sectionRef }: { sectionRef: React
         <div style={{ marginBottom: '2rem' }}>
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.5rem', letterSpacing: '0.18em', color: '#333', marginBottom: '1rem' }}>УСЛУГИ</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {SERVICES.map((s, i) => (
+            {services.map((s, i) => (
               <motion.div
                 key={s.title}
                 initial={{ opacity: 0, x: -16 }} whileInView={{ opacity: 1, x: 0 }}
@@ -148,7 +163,7 @@ export default function MobileContactSection({ sectionRef }: { sectionRef: React
         <div style={{ marginBottom: '2rem' }}>
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.5rem', letterSpacing: '0.18em', color: '#333', marginBottom: '1rem' }}>КОНТАКТЫ</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {LINKS.map(l => (
+            {links.map(l => (
               <motion.a
                 key={l.label}
                 href={l.href}
