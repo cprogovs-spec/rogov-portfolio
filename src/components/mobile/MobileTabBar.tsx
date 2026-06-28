@@ -75,14 +75,14 @@ export default function MobileTabBar({
             </AnimatePresence>
 
             <motion.div
-              animate={{ color: isActive ? '#8cd66e' : '#383838', scale: isActive ? 1.1 : 1 }}
+              animate={{ color: isActive ? '#8cd66e' : '#aaa', scale: isActive ? 1.1 : 1 }}
               transition={{ duration: 0.18 }}
             >
               <Icon size={18} strokeWidth={1.5} />
             </motion.div>
 
             <motion.span
-              animate={{ color: isActive ? '#8cd66e' : '#383838' }}
+              animate={{ color: isActive ? '#8cd66e' : '#aaa' }}
               transition={{ duration: 0.18 }}
               style={{ fontFamily: 'var(--font-mono)', fontSize: '0.42rem', letterSpacing: '0.08em' }}
             >

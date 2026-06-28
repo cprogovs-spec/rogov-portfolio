@@ -51,13 +51,13 @@ function MobileForm({ onClose }: { onClose: () => void }) {
             <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', color: '#e8e8e8', letterSpacing: '-0.01em' }}>
               {sent ? 'ОТПРАВЛЕНО' : 'НОВЫЙ ПРОЕКТ'}
             </h3>
-            <button onClick={onClose} style={{ background: 'none', border: '1px solid #2a2a2a', borderRadius: '50%', width: 36, height: 36, color: '#666', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', WebkitTapHighlightColor: 'transparent' }}>✕</button>
+            <button onClick={onClose} style={{ background: 'none', border: '1px solid #2a2a2a', borderRadius: '50%', width: 36, height: 36, color: '#c0c0c0', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', WebkitTapHighlightColor: 'transparent' }}>✕</button>
           </div>
 
           {sent ? (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ textAlign: 'center', paddingTop: '2rem' }}>
               <div style={{ fontFamily: 'var(--font-display)', fontSize: '3rem', color: ACCENT_BRIGHT, marginBottom: '1rem' }}>✓</div>
-              <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.85rem', color: '#666', lineHeight: 1.7 }}>
+              <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.85rem', color: '#c0c0c0', lineHeight: 1.7 }}>
                 Заявка получена. Отвечу в течение 24 часов.
               </p>
             </motion.div>
@@ -81,7 +81,7 @@ function MobileForm({ onClose }: { onClose: () => void }) {
                 { key: 'contact', label: 'КАК СВЯЗАТЬСЯ', placeholder: 'Telegram или email' },
               ].map(({ key, label, placeholder }) => (
                 <div key={key}>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.5rem', letterSpacing: '0.15em', color: '#444', marginBottom: 6 }}>{label}</div>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.5rem', letterSpacing: '0.15em', color: '#aaa', marginBottom: 6 }}>{label}</div>
                   <input
                     value={formData[key as keyof typeof formData]}
                     onChange={e => setFormData(f => ({ ...f, [key]: e.target.value }))}
@@ -96,7 +96,7 @@ function MobileForm({ onClose }: { onClose: () => void }) {
                 </div>
               ))}
               <div>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.5rem', letterSpacing: '0.15em', color: '#444', marginBottom: 6 }}>ЗАДАЧА</div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.5rem', letterSpacing: '0.15em', color: '#aaa', marginBottom: 6 }}>ЗАДАЧА</div>
                 <textarea
                   value={formData.message}
                   onChange={e => setFormData(f => ({ ...f, message: e.target.value }))}
@@ -154,13 +154,12 @@ export default function MobileContactSection({ sectionRef }: { sectionRef: React
 
       <div style={{ position: 'relative', zIndex: 1, flex: 1, padding: '2rem 1.25rem calc(80px + env(safe-area-inset-bottom))', display: 'flex', flexDirection: 'column' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} style={{ marginBottom: '2rem' }}>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.55rem', letterSpacing: '0.18em', color: ACCENT, marginBottom: 8 }}>05 / КОНТАКТЫ</div>
           <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.5rem, 12vw, 4rem)', color: '#f0f0f0', lineHeight: 0.9, letterSpacing: '-0.02em' }}>ДАВАЙТЕ<br/>РАБОТАТЬ</h2>
         </motion.div>
 
         {/* Services */}
         <div style={{ marginBottom: '2rem' }}>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.5rem', letterSpacing: '0.18em', color: '#333', marginBottom: '1rem' }}>УСЛУГИ</div>
+          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.5rem', letterSpacing: '0.18em', color: '#888', marginBottom: '1rem' }}>УСЛУГИ</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {services.map((s, i) => (
               <motion.div
@@ -173,7 +172,7 @@ export default function MobileContactSection({ sectionRef }: { sectionRef: React
                   <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.8rem', color: '#bbb' }}>{s.title}</span>
                   <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', color: ACCENT, letterSpacing: '0.06em' }}>{s.price}</span>
                 </div>
-                <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.67rem', color: '#444', lineHeight: 1.5 }}>{s.desc}</p>
+                <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.67rem', color: '#aaa', lineHeight: 1.5 }}>{s.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -181,7 +180,7 @@ export default function MobileContactSection({ sectionRef }: { sectionRef: React
 
         {/* Links */}
         <div style={{ marginBottom: '2rem' }}>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.5rem', letterSpacing: '0.18em', color: '#333', marginBottom: '1rem' }}>КОНТАКТЫ</div>
+          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.5rem', letterSpacing: '0.18em', color: '#888', marginBottom: '1rem' }}>КОНТАКТЫ</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {links.map(l => (
               <motion.a
@@ -196,7 +195,7 @@ export default function MobileContactSection({ sectionRef }: { sectionRef: React
                   WebkitTapHighlightColor: 'transparent',
                 }}
               >
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.55rem', letterSpacing: '0.1em', color: '#444' }}>{l.label}</span>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.55rem', letterSpacing: '0.1em', color: '#aaa' }}>{l.label}</span>
                 <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.78rem', color: ACCENT_BRIGHT }}>{l.value}</span>
               </motion.a>
             ))}
