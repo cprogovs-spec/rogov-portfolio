@@ -2,14 +2,15 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useCallback } from 'react'
-import { Layers, Brain, Play, Mail, House } from 'lucide-react'
+import { Layers, Brain, Play, Mail, House, BookOpen } from 'lucide-react'
 
 const TABS = [
-  { id: 'home',   label: 'ГЛАВНАЯ',  Icon: House },
-  { id: 'web',    label: 'ВЕБ',      Icon: Layers },
-  { id: 'ai',     label: 'НЕЙРО',    Icon: Brain },
-  { id: 'motion', label: 'МОУШЕН',   Icon: Play },
-  { id: 'contact',label: 'КОНТАКТ',  Icon: Mail },
+  { id: 'home',    label: 'ГЛАВНАЯ', Icon: House },
+  { id: 'web',     label: 'ВЕБ',     Icon: Layers },
+  { id: 'ai',      label: 'НЕЙРО',   Icon: Brain },
+  { id: 'motion',  label: 'МОУШЕН',  Icon: Play },
+  { id: 'useful',  label: 'СТАТЬИ',  Icon: BookOpen },
+  { id: 'contact', label: 'КОНТАКТ', Icon: Mail },
 ]
 
 type Ripple = { id: number; x: number; y: number }
@@ -34,16 +35,12 @@ export default function MobileTabBar({
   return (
     <nav
       style={{
-        position: 'fixed',
-        bottom: 0, left: 0, right: 0,
-        display: 'flex',
-        height: 64,
+        position: 'fixed', bottom: 0, left: 0, right: 0,
+        display: 'flex', height: 64,
         background: 'rgba(10,10,10,0.92)',
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)',
+        backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)',
         borderTop: '1px solid #1e1e1e',
-        zIndex: 200,
-        paddingBottom: 'env(safe-area-inset-bottom)',
+        zIndex: 200, paddingBottom: 'env(safe-area-inset-bottom)',
       }}
     >
       {TABS.map(({ id, label, Icon }) => {
@@ -53,29 +50,19 @@ export default function MobileTabBar({
             key={id}
             onClick={(e) => handleTap(e, id)}
             style={{
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 4,
-              position: 'relative',
-              overflow: 'hidden',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              minHeight: 44,
-              WebkitTapHighlightColor: 'transparent',
+              flex: 1, display: 'flex', flexDirection: 'column',
+              alignItems: 'center', justifyContent: 'center', gap: 3,
+              position: 'relative', overflow: 'hidden',
+              background: 'none', border: 'none', cursor: 'pointer',
+              minHeight: 44, WebkitTapHighlightColor: 'transparent',
             }}
           >
-            {/* active top bar */}
             <AnimatePresence>
               {isActive && (
                 <motion.span
                   layoutId="mobile-tab-bar"
                   style={{
-                    position: 'absolute',
-                    top: 0, left: 8, right: 8, height: 2,
+                    position: 'absolute', top: 0, left: 6, right: 6, height: 2,
                     background: 'linear-gradient(90deg, transparent, #6B935C, transparent)',
                     borderRadius: 1,
                   }}
@@ -91,18 +78,17 @@ export default function MobileTabBar({
               animate={{ color: isActive ? '#8cd66e' : '#383838', scale: isActive ? 1.1 : 1 }}
               transition={{ duration: 0.18 }}
             >
-              <Icon size={20} strokeWidth={1.5} />
+              <Icon size={18} strokeWidth={1.5} />
             </motion.div>
 
             <motion.span
               animate={{ color: isActive ? '#8cd66e' : '#383838' }}
               transition={{ duration: 0.18 }}
-              style={{ fontFamily: 'var(--font-mono)', fontSize: '0.5rem', letterSpacing: '0.1em' }}
+              style={{ fontFamily: 'var(--font-mono)', fontSize: '0.42rem', letterSpacing: '0.08em' }}
             >
               {label}
             </motion.span>
 
-            {/* ripple */}
             <AnimatePresence>
               {(ripples[id] ?? []).map(rp => (
                 <motion.span

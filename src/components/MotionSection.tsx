@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import CoverMedia from './CoverMedia'
 import { supabase } from '@/lib/supabase'
+import { RichContent } from '@/lib/renderContent'
 
 const DEFAULT_ACCENT = '#C4873A'
 
@@ -161,7 +162,7 @@ function WorkExpanded({ w, onClose }: { w: Work; onClose: () => void }) {
 
           <div style={{ height: 1, background: `linear-gradient(90deg, ${w.accent}66, transparent)`, marginBottom: '2rem' }} />
 
-          <div style={{ fontFamily: 'var(--font-sans)', fontSize: '0.9rem', color: '#777', lineHeight: 1.8, whiteSpace: 'pre-line', maxWidth: 680, marginBottom: '2.5rem' }}>{w.fullDesc}</div>
+          <RichContent html={w.fullDesc} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.9rem', color: '#777', lineHeight: 1.8, maxWidth: 680, marginBottom: '2.5rem' }} />
 
           {w.media && w.media.length > 0 && (
             <div>

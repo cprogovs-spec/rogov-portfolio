@@ -1,10 +1,21 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import RichTextEditor from '@/components/admin/RichTextEditor'
+
+async function uploadMediaFile(file: File): Promise<string> {
+  const ext = file.name.split('.').pop() ?? 'bin'
+  const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+  const { error } = await supabase.storage.from('media').upload(path, file, { upsert: false })
+  if (error) throw new Error(error.message)
+  return supabase.storage.from('media').getPublicUrl(path).data.publicUrl
+}
 
 // ─── Types ───────────────────────────────────────────────────────────────────
+type MediaItem = { url: string; type: 'image' | 'video' }
+
 type Case = {
   id: string
   section: string
@@ -22,6 +33,7 @@ type Case = {
   stat_value: string
   stat_label: string
   colors: string[]
+  media: MediaItem[]
   sort_order: number
   published: boolean
 }
@@ -59,6 +71,7 @@ const EMPTY_CASE: Omit<Case, 'id'> = {
   stat_value: '',
   stat_label: '',
   colors: [],
+  media: [],
   sort_order: 0,
   published: true,
 }
@@ -257,6 +270,60 @@ function CaseForm({
   const [colorsStr, setColorsStr] = useState((initial?.colors ?? []).join(', '))
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+  const [coverUploading, setCoverUploading] = useState(false)
+  const [mediaUploading, setMediaUploading] = useState(false)
+  const [mediaUrlInput, setMediaUrlInput] = useState('')
+  const coverFileRef = useRef<HTMLInputElement>(null)
+  const mediaFileRef = useRef<HTMLInputElement>(null)
+
+  function addMediaByUrl() {
+    const url = mediaUrlInput.trim()
+    if (!url) return
+    const isVideo = /\.(mp4|webm|mov|avi)$/i.test(url)
+    set('media', [...(form.media ?? []), { url, type: isVideo ? 'video' : 'image' }])
+    setMediaUrlInput('')
+  }
+
+  async function handleMediaUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files ?? [])
+    if (!files.length) return
+    setMediaUploading(true)
+    try {
+      const newItems: MediaItem[] = await Promise.all(
+        files.map(async f => {
+          const url = await uploadMediaFile(f)
+          return { url, type: f.type.startsWith('video/') ? 'video' as const : 'image' as const }
+        })
+      )
+      set('media', [...(form.media ?? []), ...newItems])
+    } catch (err) {
+      setError('Ошибка загрузки: ' + (err as Error).message)
+    } finally {
+      setMediaUploading(false)
+      e.target.value = ''
+    }
+  }
+
+  function removeMedia(index: number) {
+    set('media', (form.media ?? []).filter((_, i) => i !== index))
+  }
+
+  async function handleCoverUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setCoverUploading(true)
+    try {
+      const url = await uploadMediaFile(file)
+      const isVideo = file.type.startsWith('video/')
+      set('cover_url', url)
+      set('cover_type', isVideo ? 'video' : 'image')
+    } catch (err) {
+      setError('Ошибка загрузки: ' + (err as Error).message)
+    } finally {
+      setCoverUploading(false)
+      e.target.value = ''
+    }
+  }
 
   function set(field: keyof typeof form, value: unknown) {
     setForm(f => ({ ...f, [field]: value }))
@@ -318,17 +385,30 @@ function CaseForm({
           <label style={S.label}>ДЛИТЕЛЬНОСТЬ</label>
           <input style={S.input} value={form.duration} onChange={e => set('duration', e.target.value)} />
         </div>
-        <div style={S.formField}>
-          <label style={S.label}>ОБЛОЖКА URL</label>
-          <input style={S.input} value={form.cover_url} onChange={e => set('cover_url', e.target.value)} placeholder="https://..." />
-        </div>
-        <div style={S.formField}>
-          <label style={S.label}>ТИП ОБЛОЖКИ</label>
-          <div style={{ display: 'flex', gap: '16px', paddingTop: '6px' }}>
+        <div style={{ ...S.formField, gridColumn: 'span 2' }}>
+          <label style={S.label}>ОБЛОЖКА (URL или загрузить файл)</label>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            <input style={{ ...S.input, flex: 1 }} value={form.cover_url} onChange={e => set('cover_url', e.target.value)} placeholder="https://..." />
+            <button type="button" onClick={() => coverFileRef.current?.click()}
+              disabled={coverUploading}
+              style={{ ...S.btn, whiteSpace: 'nowrap', flexShrink: 0, opacity: coverUploading ? 0.6 : 1 }}>
+              {coverUploading ? 'Загрузка...' : '↑ Файл'}
+            </button>
+            <input ref={coverFileRef} type="file" accept="image/*,video/*" style={{ display: 'none' }} onChange={handleCoverUpload} />
+          </div>
+          {form.cover_url && (
+            <div style={{ marginTop: 8 }}>
+              {form.cover_type === 'video'
+                ? <video src={form.cover_url} style={{ maxHeight: 80, borderRadius: 4, border: '1px solid #2a2a2a' }} />
+                : <img src={form.cover_url} alt="" style={{ maxHeight: 80, borderRadius: 4, border: '1px solid #2a2a2a', objectFit: 'cover' }} />
+              }
+            </div>
+          )}
+          <div style={{ display: 'flex', gap: '16px', paddingTop: '8px' }}>
+            <span style={{ ...S.label, marginBottom: 0 }}>ТИП:</span>
             {['image', 'video'].map(t => (
-              <label key={t} style={{ color: '#aaa', fontSize: '13px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <input type="radio" name="cover_type" value={t} checked={form.cover_type === t}
-                  onChange={() => set('cover_type', t)} />
+              <label key={t} style={{ color: '#aaa', fontSize: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <input type="radio" name="cover_type" value={t} checked={form.cover_type === t} onChange={() => set('cover_type', t)} />
                 {t === 'image' ? 'Изображение' : 'Видео'}
               </label>
             ))}
@@ -377,8 +457,48 @@ function CaseForm({
       </div>
       <div style={S.formField}>
         <label style={S.label}>ПОЛНОЕ ОПИСАНИЕ</label>
-        <textarea style={{ ...S.textarea, minHeight: '120px' }} value={form.full_desc} onChange={e => set('full_desc', e.target.value)} />
+        <RichTextEditor value={form.full_desc} onChange={v => set('full_desc', v)} />
       </div>
+
+      {/* Media gallery */}
+      <div style={S.formField}>
+        <label style={S.label}>МЕДИА-ГАЛЕРЕЯ (картинки и видео внутри кейса)</label>
+        <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
+          <input
+            style={{ ...S.input, flex: 1 }}
+            value={mediaUrlInput}
+            onChange={e => setMediaUrlInput(e.target.value)}
+            placeholder="https://... (Enter для добавления)"
+            onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addMediaByUrl() } }}
+          />
+          <button type="button" onClick={addMediaByUrl} style={S.btnSmall}>+ URL</button>
+          <button type="button" onClick={() => mediaFileRef.current?.click()} disabled={mediaUploading}
+            style={{ ...S.btn, whiteSpace: 'nowrap', flexShrink: 0, opacity: mediaUploading ? 0.6 : 1 }}>
+            {mediaUploading ? 'Загрузка...' : '↑ Файлы'}
+          </button>
+          <input ref={mediaFileRef} type="file" accept="image/*,video/*" multiple style={{ display: 'none' }} onChange={handleMediaUpload} />
+        </div>
+        {(form.media ?? []).length > 0 && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            {(form.media ?? []).map((item, i) => (
+              <div key={i} style={{ position: 'relative', border: '1px solid #2a2a2a', borderRadius: 4, overflow: 'hidden' }}>
+                {item.type === 'video'
+                  ? <video src={item.url} style={{ width: 100, height: 70, objectFit: 'cover', display: 'block' }} />
+                  : <img src={item.url} alt="" style={{ width: 100, height: 70, objectFit: 'cover', display: 'block' }} />
+                }
+                <button type="button" onClick={() => removeMedia(i)}
+                  style={{ position: 'absolute', top: 2, right: 2, width: 18, height: 18, background: 'rgba(0,0,0,0.7)', border: 'none', borderRadius: '50%', color: '#fff', cursor: 'pointer', fontSize: 10, lineHeight: '18px', textAlign: 'center', padding: 0 }}>
+                  ✕
+                </button>
+                <div style={{ fontSize: 9, color: '#555', fontFamily: 'monospace', padding: '2px 4px', background: '#0a0a0a' }}>
+                  {item.type === 'video' ? 'VIDEO' : 'IMG'}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       <div style={{ ...S.formField, display: 'flex', alignItems: 'center', gap: '8px' }}>
         <input type="checkbox" id="pub_case" checked={form.published} onChange={e => set('published', e.target.checked)} />
         <label htmlFor="pub_case" style={{ color: '#aaa', fontSize: '13px', cursor: 'pointer' }}>Опубликован</label>
@@ -463,7 +583,7 @@ function ArticleForm({
       </div>
       <div style={S.formField}>
         <label style={S.label}>ТЕКСТ СТАТЬИ</label>
-        <textarea style={{ ...S.textarea, minHeight: '160px' }} value={form.body} onChange={e => set('body', e.target.value)} />
+        <RichTextEditor value={form.body} onChange={v => set('body', v)} />
       </div>
       <div style={{ ...S.formField, display: 'flex', alignItems: 'center', gap: '8px' }}>
         <input type="checkbox" id="pub_art" checked={form.published} onChange={e => set('published', e.target.checked)} />

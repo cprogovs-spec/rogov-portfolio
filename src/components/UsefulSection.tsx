@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
+import { RichContent } from '@/lib/renderContent'
 
 const ACCENT = '#9E8A6E'
 
@@ -143,12 +144,7 @@ function ArticleExpanded({ a, onClose }: { a: Article; onClose: () => void }) {
 
           <div style={{ height: 1, background: `linear-gradient(90deg, ${ACCENT}66, transparent)`, marginBottom: '2rem' }} />
 
-          {/* Body */}
-          <div style={{
-            fontFamily: 'var(--font-sans)', fontSize: '0.92rem',
-            color: '#888', lineHeight: 1.85, whiteSpace: 'pre-line',
-            maxWidth: 680,
-          }}>{a.body}</div>
+          <RichContent html={a.body} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.92rem', color: '#888', lineHeight: 1.85, maxWidth: 680 }} />
         </div>
       </motion.div>
     </>
