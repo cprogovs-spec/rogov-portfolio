@@ -53,10 +53,21 @@ const SCROLL_SECTIONS = [
 function ContactForm({ onClose }: { onClose: () => void }) {
   const [formData, setFormData] = useState({ name: '', contact: '', message: '' })
   const [sent, setSent] = useState(false)
+  const [sending, setSending] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setSent(true)
+    setSending(true)
+    try {
+      await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      })
+    } finally {
+      setSending(false)
+      setSent(true)
+    }
   }
 
   const inputStyle: React.CSSProperties = {
@@ -191,7 +202,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
                 marginTop: 4,
               }}
             >
-              ОТПРАВИТЬ ЗАЯВКУ ↵
+              {sending ? 'ОТПРАВКА...' : 'ОТПРАВИТЬ ЗАЯВКУ ↵'}
             </motion.button>
           </form>
         )}

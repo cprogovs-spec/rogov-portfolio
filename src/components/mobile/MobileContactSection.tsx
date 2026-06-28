@@ -27,6 +27,7 @@ const DEFAULT_LINKS: Link[] = [
 function MobileForm({ onClose }: { onClose: () => void }) {
   const [formData, setFormData] = useState({ name: '', contact: '', message: '' })
   const [sent, setSent] = useState(false)
+  const [sending, setSending] = useState(false)
 
   return (
     <>
@@ -61,7 +62,20 @@ function MobileForm({ onClose }: { onClose: () => void }) {
               </p>
             </motion.div>
           ) : (
-            <form onSubmit={(e) => { e.preventDefault(); setSent(true) }} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <form onSubmit={async (e) => {
+              e.preventDefault()
+              setSending(true)
+              try {
+                await fetch('/api/contact', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(formData),
+                })
+              } finally {
+                setSending(false)
+                setSent(true)
+              }
+            }} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               {[
                 { key: 'name', label: 'ИМЯ', placeholder: 'Как вас зовут?' },
                 { key: 'contact', label: 'КАК СВЯЗАТЬСЯ', placeholder: 'Telegram или email' },
@@ -105,7 +119,7 @@ function MobileForm({ onClose }: { onClose: () => void }) {
                   fontFamily: 'var(--font-mono)', fontSize: '0.72rem', letterSpacing: '0.14em',
                   color: ACCENT_BRIGHT, cursor: 'pointer', WebkitTapHighlightColor: 'transparent',
                 }}
-              >ОТПРАВИТЬ →</motion.button>
+              >{sending ? 'ОТПРАВКА...' : 'ОТПРАВИТЬ →'}</motion.button>
             </form>
           )}
         </div>
