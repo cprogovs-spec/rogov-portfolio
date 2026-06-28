@@ -84,6 +84,24 @@ export default function MobileHero({ onScrollDown }: { onScrollDown: () => void 
           ОФОРМИТЬ ЗАЯВКУ ↵
         </motion.button>
 
+        <motion.a
+          href="/about"
+          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 1.8 }}
+          style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            height: 52,
+            background: 'none',
+            border: '1px solid rgba(255,255,255,0.1)',
+            borderRadius: 3,
+            fontFamily: 'var(--font-mono)', fontSize: '0.7rem',
+            letterSpacing: '0.14em', color: 'rgba(255,255,255,0.5)',
+            textDecoration: 'none', width: '100%',
+          }}
+        >
+          ОБО МНЕ →
+        </motion.a>
+
         <motion.button
           onClick={onScrollDown}
           initial={{ opacity: 0 }} animate={{ opacity: 1 }}

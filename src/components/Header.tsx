@@ -51,7 +51,7 @@ export default function Header() {
 
       {/* hero name — centered */}
       <div className="relative z-10 flex-1 flex items-center justify-center">
-        <RogovTitle />
+        <RogovTitle baseColor="#e8e8e8" />
       </div>
 
       {/* scroll hint above nav */}
