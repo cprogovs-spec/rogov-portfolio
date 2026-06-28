@@ -29,13 +29,12 @@ export default function Header() {
         <motion.button
           onClick={() => window.dispatchEvent(new CustomEvent('open-contact-form'))}
           className="flex items-center gap-2 cursor-pointer"
-          style={{ background: 'none', border: 'none', padding: 0 }}
           style={{
+            background: 'none', border: 'none', padding: 0,
             fontFamily: 'var(--font-mono)',
             fontSize: '0.7rem',
             letterSpacing: '0.12em',
             color: 'var(--foreground)',
-            textDecoration: 'none',
           }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
