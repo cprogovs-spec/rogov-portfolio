@@ -45,7 +45,7 @@ function MobileAiCard({ p, index, onOpen }: { p: Project; index: number; onOpen:
     >
       {p.cover && (
         <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
-          <CoverMedia src={p.cover} type={p.coverType} hovered={false} bgOpacity={0.2} />
+          <CoverMedia src={p.cover} type={p.coverType} hovered={true} bgOpacity={0.2} />
           <div style={{ position: 'absolute', inset: 0, background: '#111', opacity: 0.82 }} />
         </div>
       )}
@@ -181,7 +181,7 @@ export default function MobileAiSection({ sectionRef }: { sectionRef: React.RefO
   const openProject = projects.find(p => p.id === openId) ?? null
 
   return (
-    <div ref={sectionRef} id="ai" style={{ width: '100%', minHeight: '100svh', background: '#0d0d0d', padding: '2rem 1.25rem calc(80px + env(safe-area-inset-bottom))', flexShrink: 0 }}>
+    <div ref={sectionRef} id="ai" style={{ width: '100%', minHeight: '100svh', boxSizing: 'border-box', background: '#0d0d0d', padding: '2rem 1.25rem calc(80px + env(safe-area-inset-bottom))', flexShrink: 0 }}>
       <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} style={{ marginBottom: '1.75rem' }}>
         <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.5rem, 12vw, 4rem)', color: '#f0f0f0', lineHeight: 0.9, letterSpacing: '-0.02em' }}>AI-ПРОЕКТЫ</h2>
         <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.85rem', color: '#aaa', marginTop: 10, lineHeight: 1.55 }}>Применение генеративных нейросетей в дизайн-процессе</p>

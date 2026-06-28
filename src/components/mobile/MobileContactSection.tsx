@@ -149,7 +149,7 @@ export default function MobileContactSection({ sectionRef }: { sectionRef: React
   }, [])
 
   return (
-    <div ref={sectionRef} id="contact" style={{ width: '100%', minHeight: '100svh', background: '#0d0d0d', position: 'relative', overflow: 'hidden', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
+    <div ref={sectionRef} id="contact" style={{ width: '100%', minHeight: '100svh', boxSizing: 'border-box', background: '#0d0d0d', position: 'relative', overflow: 'hidden', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
       <GridBackground />
 
       <div style={{ position: 'relative', zIndex: 1, flex: 1, padding: '2rem 1.25rem calc(80px + env(safe-area-inset-bottom))', display: 'flex', flexDirection: 'column' }}>

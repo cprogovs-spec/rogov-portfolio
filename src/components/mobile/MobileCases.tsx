@@ -50,7 +50,7 @@ function MobileCaseCard({ c, index, onOpen }: { c: Case; index: number; onOpen: 
       {/* Cover bg */}
       {c.cover && (
         <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
-          <CoverMedia src={c.cover} type={c.coverType} hovered={false} bgOpacity={0.2} />
+          <CoverMedia src={c.cover} type={c.coverType} hovered={true} bgOpacity={0.2} />
           <div style={{ position: 'absolute', inset: 0, background: '#111', opacity: 0.82 }} />
         </div>
       )}
@@ -225,7 +225,7 @@ export default function MobileCases({ sectionRef }: { sectionRef: React.RefObjec
       ref={sectionRef}
       id="web"
       style={{
-        width: '100%', minHeight: '100svh', background: '#0d0d0d',
+        width: '100%', minHeight: '100svh', boxSizing: 'border-box', background: '#0d0d0d', boxSizing: 'border-box',
         padding: '2rem 1.25rem calc(80px + env(safe-area-inset-bottom))',
         flexShrink: 0,
       }}
