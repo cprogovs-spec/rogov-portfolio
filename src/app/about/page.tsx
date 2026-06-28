@@ -258,9 +258,10 @@ export default function AboutPage() {
 
           <h1 style={{
             fontFamily: 'var(--font-display)',
-            fontSize: 'clamp(2.8rem, 13vw, 9rem)',
-            lineHeight: 0.9, letterSpacing: '-0.03em',
+            fontSize: 'clamp(2rem, 10vw, 9rem)',
+            lineHeight: 0.95, letterSpacing: '-0.03em',
             margin: '0 0 1.5rem',
+            wordBreak: 'break-word',
           }}>
             {chars.map((ch, i) => (
               <span key={i} style={{
@@ -354,7 +355,7 @@ export default function AboutPage() {
         <FloatingPaths position={-1} />
         <div style={{ position: 'relative', zIndex: 1 }}>
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.5rem', letterSpacing: '0.2em', color: ACCENT, marginBottom: '1rem' }}>04 / КОНТАКТ</div>
-          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.5rem, 13vw, 6rem)', color: '#f0f0f0', letterSpacing: '-0.02em', lineHeight: 0.9, margin: '0 0 2rem' }}>РАБОТАЕМ?</h2>
+          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 10vw, 6rem)', color: '#f0f0f0', letterSpacing: '-0.02em', lineHeight: 0.9, margin: '0 0 2rem' }}>РАБОТАЕМ?</h2>
           <button
             onClick={() => setShowForm(true)}
             style={{
