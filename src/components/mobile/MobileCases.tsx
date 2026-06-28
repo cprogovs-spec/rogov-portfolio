@@ -66,16 +66,16 @@ function MobileCaseCard({ c, index, onOpen }: { c: Case; index: number; onOpen: 
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
             {c.tags.map(t => (
               <span key={t} style={{
-                fontFamily: 'var(--font-mono)', fontSize: '0.55rem', letterSpacing: '0.1em',
+                fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.1em',
                 color: c.accent, border: `1px solid ${c.accent}44`, padding: '2px 7px', borderRadius: 2,
               }}>{t}</span>
             ))}
           </div>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', color: '#333' }}>{c.year}</span>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.85rem', color: '#c0c0c0' }}>{c.year}</span>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 8 }}>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.55rem', color: '#2a2a2a' }}>{c.num}</span>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#2a2a2a' }}>{c.num}</span>
           <h3 style={{
             fontFamily: 'var(--font-display)',
             fontSize: 'clamp(1.4rem, 7vw, 2rem)',
@@ -83,12 +83,12 @@ function MobileCaseCard({ c, index, onOpen }: { c: Case; index: number; onOpen: 
           }}>{c.title}</h3>
         </div>
 
-        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: '#555', lineHeight: 1.55, marginBottom: 14, flex: 1 }}>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.85rem', color: '#aaa', lineHeight: 1.55, marginBottom: 14, flex: 1 }}>
           {c.desc}
         </p>
 
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.1em', color: c.accent }}>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.88rem', letterSpacing: '0.1em', color: c.accent }}>
             СМОТРЕТЬ ↗
           </span>
         </div>
@@ -136,7 +136,7 @@ function MobileCaseExpanded({ c, onClose }: { c: Case; onClose: () => void }) {
             style={{
               width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center',
               background: 'rgba(255,255,255,0.05)', border: '1px solid #2a2a2a', borderRadius: '50%',
-              cursor: 'pointer', color: '#666', WebkitTapHighlightColor: 'transparent',
+              cursor: 'pointer', color: '#c0c0c0', WebkitTapHighlightColor: 'transparent',
             }}
           ><X size={16} strokeWidth={1.5} /></motion.button>
         </div>
@@ -144,7 +144,7 @@ function MobileCaseExpanded({ c, onClose }: { c: Case; onClose: () => void }) {
         <div style={{ flex: 1, overflow: 'auto', padding: '0.75rem 1.25rem 1.5rem', position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: '1rem' }}>
             {c.tags.map(t => (
-              <span key={t} style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', letterSpacing: '0.1em', color: c.accent, border: `1px solid ${c.accent}44`, padding: '3px 9px', borderRadius: 2 }}>{t}</span>
+              <span key={t} style={{ fontFamily: 'var(--font-mono)', fontSize: '0.85rem', letterSpacing: '0.1em', color: c.accent, border: `1px solid ${c.accent}44`, padding: '3px 9px', borderRadius: 2 }}>{t}</span>
             ))}
           </div>
 
@@ -157,19 +157,19 @@ function MobileCaseExpanded({ c, onClose }: { c: Case; onClose: () => void }) {
           <div style={{ display: 'flex', gap: '2rem', marginBottom: '1.25rem' }}>
             {[['Роль', c.role], ['Срок', c.duration]].map(([label, val]) => (
               <div key={label}>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.5rem', letterSpacing: '0.15em', color: '#383838', marginBottom: 3 }}>{label}</div>
-                <div style={{ fontFamily: 'var(--font-sans)', fontSize: '0.78rem', color: '#888' }}>{val}</div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.15em', color: '#aaa', marginBottom: 3 }}>{label}</div>
+                <div style={{ fontFamily: 'var(--font-sans)', fontSize: '0.9rem', color: '#c0c0c0' }}>{val}</div>
               </div>
             ))}
           </div>
 
           <div style={{ height: 1, background: `linear-gradient(90deg, ${c.accent}55, transparent)`, marginBottom: '1.25rem' }} />
 
-          <RichContent html={c.fullDesc} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.82rem', color: '#666', lineHeight: 1.75, marginBottom: '1.5rem' }} />
+          <RichContent html={c.fullDesc} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.82rem', color: '#c0c0c0', lineHeight: 1.75, marginBottom: '1.5rem' }} />
 
           {c.media && c.media.length > 0 && (
             <div>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.5rem', letterSpacing: '0.15em', color: '#333', marginBottom: 10 }}>МЕДИА</div>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.15em', color: '#c0c0c0', marginBottom: 10 }}>МЕДИА</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {c.media.map((item, i) => (
                   <div key={i} style={{ borderRadius: 3, overflow: 'hidden', border: `1px solid ${c.accent}33`, aspectRatio: '16/9' }}>
@@ -235,9 +235,8 @@ export default function MobileCases({ sectionRef }: { sectionRef: React.RefObjec
         viewport={{ once: true }} transition={{ duration: 0.5 }}
         style={{ marginBottom: '1.75rem' }}
       >
-        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.55rem', letterSpacing: '0.18em', color: '#6B935C', marginBottom: 8 }}>01 / ВЕБ-ДИЗАЙН</div>
         <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.5rem, 12vw, 4rem)', color: '#f0f0f0', lineHeight: 0.9, letterSpacing: '-0.02em' }}>КЕЙСЫ</h2>
-        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: '#444', marginTop: 10, lineHeight: 1.55 }}>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.85rem', color: '#aaa', marginTop: 10, lineHeight: 1.55 }}>
           Проекты в сфере веб-дизайна — от b2b-платформ до продуктовых интерфейсов
         </p>
       </motion.div>

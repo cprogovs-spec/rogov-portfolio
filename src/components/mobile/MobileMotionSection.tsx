@@ -59,18 +59,18 @@ function MobileMotionCard({ w, index, onOpen }: { w: Work; index: number; onOpen
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
             {w.tags.map(t => (
-              <span key={t} style={{ fontFamily: 'var(--font-mono)', fontSize: '0.55rem', letterSpacing: '0.1em', color: w.accent, border: `1px solid ${w.accent}44`, padding: '2px 7px', borderRadius: 2 }}>{t}</span>
+              <span key={t} style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.1em', color: w.accent, border: `1px solid ${w.accent}44`, padding: '2px 7px', borderRadius: 2 }}>{t}</span>
             ))}
           </div>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', color: '#333' }}>{w.year}</span>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.85rem', color: '#c0c0c0' }}>{w.year}</span>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 8 }}>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.55rem', color: '#2a2a2a' }}>{w.num}</span>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#2a2a2a' }}>{w.num}</span>
           <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.4rem, 7vw, 2rem)', color: '#ccc', lineHeight: 0.95, letterSpacing: '-0.01em' }}>{w.title}</h3>
         </div>
 
-        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: '#555', lineHeight: 1.55, marginBottom: 14, flex: 1 }}>{w.desc}</p>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.85rem', color: '#aaa', lineHeight: 1.55, marginBottom: 14, flex: 1 }}>{w.desc}</p>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', gap: 4 }}>
@@ -78,7 +78,7 @@ function MobileMotionCard({ w, index, onOpen }: { w: Work; index: number; onOpen
               <div key={i} style={{ width: 7, height: 7, borderRadius: '50%', background: c }} />
             ))}
           </div>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.1em', color: w.accent }}>СМОТРЕТЬ ↗</span>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.88rem', letterSpacing: '0.1em', color: w.accent }}>СМОТРЕТЬ ↗</span>
         </div>
       </div>
     </motion.div>
@@ -113,14 +113,14 @@ function MobileMotionExpanded({ w, onClose }: { w: Work; onClose: () => void }) 
 
         <div style={{ position: 'relative', zIndex: 1, display: 'flex', justifyContent: 'flex-end', padding: '1rem 1rem 0' }}>
           <motion.button onClick={onClose} whileTap={{ scale: 0.9 }}
-            style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', border: '1px solid #2a2a2a', borderRadius: '50%', cursor: 'pointer', color: '#666', WebkitTapHighlightColor: 'transparent' }}
+            style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', border: '1px solid #2a2a2a', borderRadius: '50%', cursor: 'pointer', color: '#c0c0c0', WebkitTapHighlightColor: 'transparent' }}
           ><X size={16} strokeWidth={1.5} /></motion.button>
         </div>
 
         <div style={{ flex: 1, overflow: 'auto', padding: '0.75rem 1.25rem 1.5rem', position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: '1rem' }}>
             {w.tags.map(t => (
-              <span key={t} style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', letterSpacing: '0.1em', color: w.accent, border: `1px solid ${w.accent}44`, padding: '3px 9px', borderRadius: 2 }}>{t}</span>
+              <span key={t} style={{ fontFamily: 'var(--font-mono)', fontSize: '0.85rem', letterSpacing: '0.1em', color: w.accent, border: `1px solid ${w.accent}44`, padding: '3px 9px', borderRadius: 2 }}>{t}</span>
             ))}
           </div>
           <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.2rem, 10vw, 3.5rem)', color: '#e8e8e8', lineHeight: 0.9, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>{w.title}</h2>
@@ -128,18 +128,18 @@ function MobileMotionExpanded({ w, onClose }: { w: Work; onClose: () => void }) 
           <div style={{ display: 'flex', gap: '2rem', marginBottom: '1.25rem' }}>
             {[['Роль', w.role], ['Срок', w.duration]].map(([label, val]) => (
               <div key={label}>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.5rem', letterSpacing: '0.15em', color: '#383838', marginBottom: 3 }}>{label}</div>
-                <div style={{ fontFamily: 'var(--font-sans)', fontSize: '0.78rem', color: '#888' }}>{val}</div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.15em', color: '#aaa', marginBottom: 3 }}>{label}</div>
+                <div style={{ fontFamily: 'var(--font-sans)', fontSize: '0.9rem', color: '#c0c0c0' }}>{val}</div>
               </div>
             ))}
           </div>
 
           <div style={{ height: 1, background: `linear-gradient(90deg, ${w.accent}55, transparent)`, marginBottom: '1.25rem' }} />
-          <RichContent html={w.fullDesc} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.82rem', color: '#666', lineHeight: 1.75, marginBottom: '1.5rem' }} />
+          <RichContent html={w.fullDesc} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.82rem', color: '#c0c0c0', lineHeight: 1.75, marginBottom: '1.5rem' }} />
 
           {w.media && w.media.length > 0 && (
             <div>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.5rem', letterSpacing: '0.15em', color: '#333', marginBottom: 10 }}>МЕДИА</div>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.15em', color: '#c0c0c0', marginBottom: 10 }}>МЕДИА</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {w.media.map((item, i) => (
                   <div key={i} style={{ borderRadius: 3, overflow: 'hidden', border: `1px solid ${w.accent}33`, aspectRatio: '16/9' }}>
@@ -179,9 +179,8 @@ export default function MobileMotionSection({ sectionRef }: { sectionRef: React.
   return (
     <div ref={sectionRef} id="motion" style={{ width: '100%', minHeight: '100svh', background: '#0d0d0d', padding: '2rem 1.25rem calc(80px + env(safe-area-inset-bottom))', flexShrink: 0 }}>
       <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} style={{ marginBottom: '1.75rem' }}>
-        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.55rem', letterSpacing: '0.18em', color: DEFAULT_ACCENT, marginBottom: 8 }}>03 / МОУШЕН</div>
         <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.8rem, 8.5vw, 3rem)', color: '#f0f0f0', lineHeight: 0.9, letterSpacing: '-0.02em' }}>АНИМАЦИИ</h2>
-        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: '#444', marginTop: 10, lineHeight: 1.55 }}>Motion-дизайн для брендов, продуктов и соцсетей</p>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.85rem', color: '#aaa', marginTop: 10, lineHeight: 1.55 }}>Motion-дизайн для брендов, продуктов и соцсетей</p>
       </motion.div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>

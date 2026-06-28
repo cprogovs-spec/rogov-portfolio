@@ -37,19 +37,19 @@ function MobileArticleCard({ a, index, onOpen }: { a: Article; index: number; on
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
         <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
           {a.tags.map(t => (
-            <span key={t} style={{ fontFamily: 'var(--font-mono)', fontSize: '0.55rem', letterSpacing: '0.1em', color: ACCENT, border: `1px solid ${ACCENT}44`, padding: '2px 7px', borderRadius: 2 }}>{t}</span>
+            <span key={t} style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.1em', color: ACCENT, border: `1px solid ${ACCENT}44`, padding: '2px 7px', borderRadius: 2 }}>{t}</span>
           ))}
         </div>
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.55rem', color: '#333', whiteSpace: 'nowrap', flexShrink: 0 }}>
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#c0c0c0', whiteSpace: 'nowrap', flexShrink: 0 }}>
           {new Date(a.date).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' })}
         </span>
       </div>
 
       <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.1rem, 5.5vw, 1.5rem)', color: '#ccc', lineHeight: 1.05, letterSpacing: '-0.01em' }}>{a.title}</h3>
-      <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: '#555', lineHeight: 1.6 }}>{a.preview}</p>
+      <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.85rem', color: '#aaa', lineHeight: 1.6 }}>{a.preview}</p>
 
       <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.1em', color: ACCENT }}>ЧИТАТЬ ↗</span>
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.88rem', letterSpacing: '0.1em', color: ACCENT }}>ЧИТАТЬ ↗</span>
       </div>
     </motion.div>
   )
@@ -79,23 +79,23 @@ function MobileArticleExpanded({ a, onClose }: { a: Article; onClose: () => void
 
         <div style={{ position: 'relative', zIndex: 1, display: 'flex', justifyContent: 'flex-end', padding: '1rem 1rem 0' }}>
           <motion.button onClick={onClose} whileTap={{ scale: 0.9 }}
-            style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', border: '1px solid #2a2a2a', borderRadius: '50%', cursor: 'pointer', color: '#666', WebkitTapHighlightColor: 'transparent' }}
+            style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', border: '1px solid #2a2a2a', borderRadius: '50%', cursor: 'pointer', color: '#c0c0c0', WebkitTapHighlightColor: 'transparent' }}
           ><X size={16} strokeWidth={1.5} /></motion.button>
         </div>
 
         <div style={{ flex: 1, overflow: 'auto', padding: '0.75rem 1.25rem 1.5rem', position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center', marginBottom: '1rem' }}>
             {a.tags.map(t => (
-              <span key={t} style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', letterSpacing: '0.12em', color: ACCENT, border: `1px solid ${ACCENT}55`, padding: '3px 10px', borderRadius: 2 }}>{t}</span>
+              <span key={t} style={{ fontFamily: 'var(--font-mono)', fontSize: '0.85rem', letterSpacing: '0.12em', color: ACCENT, border: `1px solid ${ACCENT}55`, padding: '3px 10px', borderRadius: 2 }}>{t}</span>
             ))}
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.55rem', color: '#444', marginLeft: 'auto' }}>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#aaa', marginLeft: 'auto' }}>
               {new Date(a.date).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })}
             </span>
           </div>
 
           <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.8rem, 8vw, 3rem)', color: '#e8e8e8', lineHeight: 0.95, letterSpacing: '-0.02em', marginBottom: '1.5rem' }}>{a.title}</h1>
           <div style={{ height: 1, background: `linear-gradient(90deg, ${ACCENT}66, transparent)`, marginBottom: '1.25rem' }} />
-          <RichContent html={a.body} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.85rem', color: '#888', lineHeight: 1.85 }} />
+          <RichContent html={a.body} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.85rem', color: '#c0c0c0', lineHeight: 1.85 }} />
         </div>
       </motion.div>
     </>
@@ -121,9 +121,8 @@ export default function MobileUsefulSection({ sectionRef }: { sectionRef: React.
   return (
     <div ref={sectionRef} id="useful" style={{ width: '100%', minHeight: '100svh', background: '#0d0d0d', padding: '2rem 1.25rem calc(80px + env(safe-area-inset-bottom))', flexShrink: 0 }}>
       <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} style={{ marginBottom: '1.75rem' }}>
-        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.55rem', letterSpacing: '0.18em', color: ACCENT, marginBottom: 8 }}>04 / ПОЛЕЗНОЕ</div>
         <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.5rem, 12vw, 4rem)', color: '#f0f0f0', lineHeight: 0.9, letterSpacing: '-0.02em' }}>СТАТЬИ</h2>
-        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: '#444', marginTop: 10, lineHeight: 1.55 }}>Материалы о дизайне, инструментах и процессах</p>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.85rem', color: '#aaa', marginTop: 10, lineHeight: 1.55 }}>Материалы о дизайне, инструментах и процессах</p>
       </motion.div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>

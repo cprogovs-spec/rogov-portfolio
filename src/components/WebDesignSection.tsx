@@ -75,12 +75,12 @@ function CaseCard({ c, index, onOpen }: { c: Case; index: number; onOpen: (id: s
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
             {c.tags.map(t => (
               <span key={t} style={{
-                fontFamily: 'var(--font-mono)', fontSize: '0.58rem', letterSpacing: '0.12em',
+                fontFamily: 'var(--font-mono)', fontSize: '0.85rem', letterSpacing: '0.12em',
                 color: c.accent, border: `1px solid ${c.accent}44`, padding: '2px 7px', borderRadius: 2,
               }}>{t}</span>
             ))}
           </div>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: '#383838' }}>{c.year}</span>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.88rem', color: '#aaa' }}>{c.year}</span>
         </div>
 
         <div>
@@ -97,7 +97,7 @@ function CaseCard({ c, index, onOpen }: { c: Case; index: number; onOpen: (id: s
           <motion.p
             animate={{ opacity: hovered ? 1 : 0, y: hovered ? 0 : 6 }}
             transition={{ duration: 0.25 }}
-            style={{ fontFamily: 'var(--font-sans)', fontSize: '0.72rem', color: '#666', lineHeight: 1.6, maxWidth: 420 }}
+            style={{ fontFamily: 'var(--font-sans)', fontSize: '0.85rem', color: '#c0c0c0', lineHeight: 1.6, maxWidth: 420 }}
           >{c.desc}</motion.p>
         </div>
 
@@ -160,7 +160,7 @@ function CaseExpanded({ c, onClose }: { c: Case; onClose: () => void }) {
             style={{
               position: 'absolute', top: '1.5rem', right: '1.5rem',
               fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.1em',
-              color: '#444', background: 'none', border: '1px solid #2a2a2a',
+              color: '#aaa', background: 'none', border: '1px solid #2a2a2a',
               padding: '6px 12px', cursor: 'pointer', borderRadius: 2,
             }}
           >ESC ✕</motion.button>
@@ -169,11 +169,11 @@ function CaseExpanded({ c, onClose }: { c: Case; onClose: () => void }) {
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: '1.5rem' }}>
             {c.tags.map(t => (
               <span key={t} style={{
-                fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.12em',
+                fontFamily: 'var(--font-mono)', fontSize: '0.88rem', letterSpacing: '0.12em',
                 color: c.accent, border: `1px solid ${c.accent}55`, padding: '3px 10px', borderRadius: 2,
               }}>{t}</span>
             ))}
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: '#444', marginLeft: 'auto' }}>{c.year}</span>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.88rem', color: '#aaa', marginLeft: 'auto' }}>{c.year}</span>
           </div>
 
           <h2 style={{
@@ -184,7 +184,7 @@ function CaseExpanded({ c, onClose }: { c: Case; onClose: () => void }) {
           <div style={{ display: 'flex', gap: '3rem', marginBottom: '2.5rem' }}>
             {[['Роль', c.role], ['Срок', c.duration]].map(([label, val]) => (
               <div key={label}>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.55rem', letterSpacing: '0.15em', color: '#444', marginBottom: 4 }}>{label}</div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.15em', color: '#aaa', marginBottom: 4 }}>{label}</div>
                 <div style={{ fontFamily: 'var(--font-sans)', fontSize: '0.85rem', color: '#aaa' }}>{val}</div>
               </div>
             ))}
@@ -192,12 +192,12 @@ function CaseExpanded({ c, onClose }: { c: Case; onClose: () => void }) {
 
           <div style={{ height: 1, background: `linear-gradient(90deg, ${c.accent}66, transparent)`, marginBottom: '2rem' }} />
 
-          <RichContent html={c.fullDesc} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.9rem', color: '#777', lineHeight: 1.8, maxWidth: 680, marginBottom: '2.5rem' }} />
+          <RichContent html={c.fullDesc} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.9rem', color: '#c0c0c0', lineHeight: 1.8, maxWidth: 680, marginBottom: '2.5rem' }} />
 
           {/* Media gallery */}
           {c.media && c.media.length > 0 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.55rem', letterSpacing: '0.15em', color: '#444', marginBottom: 8 }}>МЕДИА</div>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.15em', color: '#aaa', marginBottom: 8 }}>МЕДИА</div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 12 }}>
                 {c.media.map((item, i) => (
                   <div key={i} style={{ borderRadius: 3, overflow: 'hidden', border: `1px solid ${c.accent}33`, aspectRatio: '16/9' }}>
@@ -262,11 +262,10 @@ export default function WebDesignSection() {
         transition={{ duration: 0.5 }}
         style={{ marginBottom: '1.5rem' }}
       >
-        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', letterSpacing: '0.18em', color: '#6B935C', marginBottom: 8 }}>
-          01 / ВЕБ-ДИЗАЙН
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.85rem', letterSpacing: '0.18em', color: '#6B935C', marginBottom: 8 }}>
         </div>
         <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 5vw, 4rem)', color: '#f0f0f0', lineHeight: 0.9, letterSpacing: '-0.02em' }}>КЕЙСЫ</h2>
-        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: '#444', marginTop: 10, maxWidth: 360 }}>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.88rem', color: '#aaa', marginTop: 10, maxWidth: 360 }}>
           Проекты в сфере веб-дизайна — от b2b-платформ до продуктовых интерфейсов
         </p>
       </motion.div>

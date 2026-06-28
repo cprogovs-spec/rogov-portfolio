@@ -123,7 +123,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
           style={{
             position: 'absolute', top: '1.25rem', right: '1.25rem',
             fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.1em',
-            color: '#555', background: 'none', border: '1px solid #2a2a2a',
+            color: '#aaa', background: 'none', border: '1px solid #2a2a2a',
             padding: '5px 10px', cursor: 'pointer', borderRadius: 3,
           }}
         >ESC ✕</motion.button>
@@ -140,7 +140,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
               fontSize: '1.4rem', color: ACCENT_BRIGHT,
             }}>✓</div>
             <div style={{ fontFamily: 'var(--font-display)', fontSize: '2.5rem', color: '#e8f5e0', lineHeight: 0.95 }}>ОТПРАВЛЕНО</div>
-            <div style={{ fontFamily: 'var(--font-sans)', fontSize: '0.9rem', color: '#777', textAlign: 'center' }}>
+            <div style={{ fontFamily: 'var(--font-sans)', fontSize: '0.9rem', color: '#c0c0c0', textAlign: 'center' }}>
               Отвечу в течение 24 часов
             </div>
           </motion.div>
@@ -157,7 +157,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
               { key: 'contact', label: 'Telegram или email', placeholder: '@username или email' },
             ].map(({ key, label, placeholder }) => (
               <div key={key} style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', letterSpacing: '0.12em', color: '#555' }}>
+                <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.85rem', letterSpacing: '0.12em', color: '#aaa' }}>
                   {label.toUpperCase()}
                 </label>
                 <input
@@ -173,7 +173,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
             ))}
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', letterSpacing: '0.12em', color: '#555' }}>
+              <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.85rem', letterSpacing: '0.12em', color: '#aaa' }}>
                 ЗАДАЧА
               </label>
               <textarea
@@ -196,7 +196,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
                 background: ACCENT + '18',
                 border: `1px solid ${ACCENT}`,
                 borderRadius: 4, cursor: 'pointer',
-                fontFamily: 'var(--font-mono)', fontSize: '0.75rem',
+                fontFamily: 'var(--font-mono)', fontSize: '0.88rem',
                 letterSpacing: '0.14em', color: ACCENT_BRIGHT,
                 transition: 'background 0.2s, border-color 0.2s',
                 marginTop: 4,
@@ -256,17 +256,16 @@ export default function ContactSection() {
         <div style={{ marginBottom: '1.5rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.18em', color: ACCENT }}>
-              04 / КОНТАКТЫ
             </div>
             <a href="/about" style={{
               display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none',
-              fontFamily: 'var(--font-mono)', fontSize: '0.55rem', letterSpacing: '0.14em',
-              color: '#444', border: '1px solid #1a1a1a', borderRadius: 3,
+              fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.14em',
+              color: '#aaa', border: '1px solid #1a1a1a', borderRadius: 3,
               padding: '0.35rem 0.7rem',
               transition: 'all 0.2s',
             }}
               onMouseEnter={e => { e.currentTarget.style.color = ACCENT_BRIGHT; e.currentTarget.style.borderColor = ACCENT + '55' }}
-              onMouseLeave={e => { e.currentTarget.style.color = '#444'; e.currentTarget.style.borderColor = '#1a1a1a' }}
+              onMouseLeave={e => { e.currentTarget.style.color = '#aaa'; e.currentTarget.style.borderColor = '#1a1a1a' }}
             >
               ОБО МНЕ
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ opacity: 0.6 }}>
@@ -338,7 +337,7 @@ export default function ContactSection() {
             }}>
               <div style={{ width: 0, height: 0, borderTop: '8px solid transparent', borderBottom: '8px solid transparent', borderLeft: `14px solid ${ACCENT}88`, marginLeft: 3 }} />
             </div>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.55rem', letterSpacing: '0.15em', color: '#2a2a2a' }}>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.15em', color: '#2a2a2a' }}>
               SHOWREEL 2024
             </div>
           </div>
@@ -354,7 +353,7 @@ export default function ContactSection() {
               style={{ height: 2, borderRadius: 1 }}
             />
           ))}
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.5rem', color: '#2a2a2a', letterSpacing: '0.1em', marginLeft: 4 }}>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#2a2a2a', letterSpacing: '0.1em', marginLeft: 4 }}>
             СКРОЛЛ ВНИЗ
           </span>
         </div>
@@ -391,7 +390,7 @@ export default function ContactSection() {
           >
             <p style={{
               fontFamily: 'var(--font-sans)', fontSize: '1.15rem',
-              color: '#888', lineHeight: 1.65, marginBottom: '3rem', maxWidth: 380,
+              color: '#c0c0c0', lineHeight: 1.65, marginBottom: '3rem', maxWidth: 380,
             }}>
               {subheading}
             </p>
@@ -434,10 +433,10 @@ export default function ContactSection() {
                     cursor: 'pointer',
                   }}
                 >
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.12em', color: '#444' }}>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.12em', color: '#aaa' }}>
                     {link.label.toUpperCase()}
                   </span>
-                  <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.95rem', color: '#888' }}>
+                  <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.95rem', color: '#c0c0c0' }}>
                     {link.value} ↗
                   </span>
                 </motion.a>
@@ -457,7 +456,7 @@ export default function ContactSection() {
             padding: '2.5rem 2.5rem 5rem',
           }}
         >
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.18em', color: ACCENT, marginBottom: '1.5rem' }}>
+          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.88rem', letterSpacing: '0.18em', color: ACCENT, marginBottom: '1.5rem' }}>
             ЧТО ДЕЛАЮ
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
@@ -479,7 +478,7 @@ export default function ContactSection() {
                   <div style={{ fontFamily: 'var(--font-sans)', fontSize: '1.1rem', color: '#ccc', marginBottom: 5 }}>
                     {s.title}
                   </div>
-                  <div style={{ fontFamily: 'var(--font-sans)', fontSize: '0.8rem', color: '#4a4a4a', lineHeight: 1.5 }}>
+                  <div style={{ fontFamily: 'var(--font-sans)', fontSize: '0.95rem', color: '#aaa', lineHeight: 1.5 }}>
                     {s.desc}
                   </div>
                 </div>
@@ -501,7 +500,7 @@ export default function ContactSection() {
               border: '1px solid #2a2a2a',
               borderRadius: 3, cursor: 'pointer',
               fontFamily: 'var(--font-mono)', fontSize: '0.7rem',
-              letterSpacing: '0.12em', color: '#555',
+              letterSpacing: '0.12em', color: '#aaa',
               transition: 'all 0.2s', marginTop: '1.5rem',
             }}
           >
@@ -520,7 +519,7 @@ export default function ContactSection() {
             padding: '2.5rem 2.5rem 5rem',
           }}
         >
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.18em', color: ACCENT, marginBottom: '1.5rem' }}>
+          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.88rem', letterSpacing: '0.18em', color: ACCENT, marginBottom: '1.5rem' }}>
             КАК РАБОТАЕМ
           </div>
 
@@ -532,10 +531,10 @@ export default function ContactSection() {
               { n: '04', t: 'Передача', d: 'Финальные файлы, гайдлайн, поддержка при внедрении.' },
             ].map(step => (
               <div key={step.n} style={{ display: 'flex', gap: '1.25rem', alignItems: 'flex-start' }}>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: '#2a2a2a', paddingTop: 3, minWidth: 20 }}>{step.n}</div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.88rem', color: '#2a2a2a', paddingTop: 3, minWidth: 20 }}>{step.n}</div>
                 <div>
                   <div style={{ fontFamily: 'var(--font-sans)', fontSize: '1rem', color: '#ccc', marginBottom: 4 }}>{step.t}</div>
-                  <div style={{ fontFamily: 'var(--font-sans)', fontSize: '0.8rem', color: '#4a4a4a', lineHeight: 1.5 }}>{step.d}</div>
+                  <div style={{ fontFamily: 'var(--font-sans)', fontSize: '0.95rem', color: '#aaa', lineHeight: 1.5 }}>{step.d}</div>
                 </div>
               </div>
             ))}
@@ -543,7 +542,7 @@ export default function ContactSection() {
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid #161616' }}>
             <Image src="/logo.svg" alt="Рогов" width={70} height={22} style={{ opacity: 0.25 }} />
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.5rem', color: '#2a2a2a', letterSpacing: '0.15em' }}>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#2a2a2a', letterSpacing: '0.15em' }}>
               ВЕБ-ДИЗАЙН · НЕЙРОСЕТИ · МОУШЕН
             </div>
           </div>
