@@ -30,6 +30,40 @@ export default function Home() {
     return () => el.removeEventListener('scroll', onScroll)
   }, [isMobile])
 
+  // Mouse wheel → switch panels (vertical scroll flips horizontally)
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+    let locked = false
+
+    const hasScrollableParent = (node: EventTarget | null): boolean => {
+      let cur = node instanceof Element ? node : null
+      while (cur && cur !== el) {
+        const { overflowY, position } = getComputedStyle(cur)
+        if (position === 'fixed') return true // modal is open — don't flip panels
+        if ((overflowY === 'auto' || overflowY === 'scroll') && cur.scrollHeight > cur.clientHeight) return true
+        cur = cur.parentElement
+      }
+      return false
+    }
+
+    const onWheel = (e: WheelEvent) => {
+      // don't hijack scroll inside open case modals / any scrollable area
+      if (hasScrollableParent(e.target)) return
+      const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX
+      if (Math.abs(delta) < 10 || locked) return
+      e.preventDefault()
+      locked = true
+      const current = Math.round(el.scrollLeft / el.offsetWidth)
+      const next = Math.max(0, Math.min(5, current + (delta > 0 ? 1 : -1)))
+      el.scrollTo({ left: next * el.offsetWidth, behavior: 'smooth' })
+      setTimeout(() => { locked = false }, 650)
+    }
+
+    el.addEventListener('wheel', onWheel, { passive: false })
+    return () => el.removeEventListener('wheel', onWheel)
+  }, [isMobile])
+
   // null = SSR / first render — render nothing to avoid flash
   if (isMobile === null) return null
 

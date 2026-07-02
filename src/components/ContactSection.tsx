@@ -162,6 +162,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
                 </label>
                 <input
                   type="text"
+                  required
                   placeholder={placeholder}
                   value={formData[key as keyof typeof formData]}
                   onChange={e => setFormData(prev => ({ ...prev, [key]: e.target.value }))}
@@ -177,6 +178,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
                 ЗАДАЧА
               </label>
               <textarea
+                required
                 placeholder="Коротко о проекте, задаче, сроках..."
                 value={formData.message}
                 onChange={e => setFormData(prev => ({ ...prev, message: e.target.value }))}
