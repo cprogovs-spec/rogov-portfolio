@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
+import { useEscapeClose } from '@/hooks/useEscapeClose'
 import { RichContent } from '@/lib/renderContent'
 
 const ACCENT = '#9E8A6E'
@@ -94,6 +95,7 @@ function ArticleCard({ a, index, onOpen }: { a: Article; index: number; onOpen: 
 }
 
 function ArticleExpanded({ a, onClose }: { a: Article; onClose: () => void }) {
+  useEscapeClose(onClose)
   return (
     <>
       <motion.div

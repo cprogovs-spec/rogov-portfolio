@@ -3,8 +3,10 @@
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { useRef, useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useEscapeClose } from '@/hooks/useEscapeClose'
 
 function ContactModal({ onClose }: { onClose: () => void }) {
+  useEscapeClose(onClose)
   const [formData, setFormData] = useState({ name: '', contact: '', message: '' })
   const [sent, setSent] = useState(false)
   const [sending, setSending] = useState(false)

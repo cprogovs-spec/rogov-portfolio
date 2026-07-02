@@ -5,6 +5,7 @@ import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import GridBackground from './GridBackground'
 import { supabase } from '@/lib/supabase'
+import { useEscapeClose } from '@/hooks/useEscapeClose'
 
 const ACCENT = '#6B935C'
 const ACCENT_BRIGHT = '#8cd66e'
@@ -51,6 +52,7 @@ const SCROLL_SECTIONS = [
 ]
 
 function ContactForm({ onClose }: { onClose: () => void }) {
+  useEscapeClose(onClose)
   const [formData, setFormData] = useState({ name: '', contact: '', message: '' })
   const [sent, setSent] = useState(false)
   const [sending, setSending] = useState(false)

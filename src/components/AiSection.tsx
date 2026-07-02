@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import CoverMedia from './CoverMedia'
+import { useEscapeClose } from '@/hooks/useEscapeClose'
 import { supabase } from '@/lib/supabase'
 import { RichContent } from '@/lib/renderContent'
 
@@ -109,6 +110,7 @@ function ProjectCard({ p, index, onOpen }: { p: Project; index: number; onOpen: 
 }
 
 function ProjectExpanded({ p, onClose }: { p: Project; onClose: () => void }) {
+  useEscapeClose(onClose)
   return (
     <>
       <motion.div

@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import CoverMedia from './CoverMedia'
+import { useEscapeClose } from '@/hooks/useEscapeClose'
 import { supabase } from '@/lib/supabase'
 import { RichContent } from '@/lib/renderContent'
 
@@ -115,6 +116,7 @@ function CaseCard({ c, index, onOpen }: { c: Case; index: number; onOpen: (id: s
 }
 
 function CaseExpanded({ c, onClose }: { c: Case; onClose: () => void }) {
+  useEscapeClose(onClose)
   return (
     <>
       <motion.div

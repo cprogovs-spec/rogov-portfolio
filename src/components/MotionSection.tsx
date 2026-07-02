@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import CoverMedia from './CoverMedia'
+import { useEscapeClose } from '@/hooks/useEscapeClose'
 import { supabase } from '@/lib/supabase'
 import { RichContent } from '@/lib/renderContent'
 
@@ -111,6 +112,7 @@ function WorkCard({ w, index, onOpen }: { w: Work; index: number; onOpen: (id: s
 }
 
 function WorkExpanded({ w, onClose }: { w: Work; onClose: () => void }) {
+  useEscapeClose(onClose)
   return (
     <>
       <motion.div
