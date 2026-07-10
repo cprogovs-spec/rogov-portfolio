@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import { useEscapeClose } from '@/hooks/useEscapeClose'
 import { usePagination, usePaginationWheel } from '@/hooks/usePagination'
 import { PaginationDots, PageTransition } from './CasesPagination'
+import GridBackground from './GridBackground'
 import { supabase } from '@/lib/supabase'
 
 const DEFAULT_ACCENT = '#6B935C'
@@ -156,12 +157,13 @@ export default function LogoSection() {
 
   return (
     <div style={{ width: '100%', height: '100%', background: '#0d0d0d', display: 'flex', flexDirection: 'column', padding: '2rem 2rem 0', overflow: 'hidden', position: 'relative' }}>
-      <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }} style={{ marginBottom: '1.5rem' }}>
+      <GridBackground />
+      <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }} style={{ marginBottom: '1.5rem', position: 'relative', zIndex: 1 }}>
         <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 5vw, 4rem)', color: '#f0f0f0', lineHeight: 0.9, letterSpacing: '-0.02em' }}>ЛОГОТИПЫ</h2>
         <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.88rem', color: '#aaa', marginTop: 10, maxWidth: 360 }}>Айдентика и знаки для брендов — от стартапов до устоявшихся компаний</p>
       </motion.div>
 
-      <div onWheel={onWheel} style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingBottom: 16 }}>
+      <div onWheel={onWheel} style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingBottom: 16, position: 'relative', zIndex: 1 }}>
         <PageTransition pageKey={page}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gridAutoRows: 'min-content', gridAutoFlow: 'dense', gap: 12, alignContent: 'center', maxHeight: 'calc(100vh - 320px)' }}>
             {pageItems.map((logo, i) => <LogoTile key={logo.id} logo={logo} index={i} onOpen={setOpenId} />)}

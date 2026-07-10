@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
+import GridBackground from '@/components/GridBackground'
 import { supabase } from '@/lib/supabase'
 
 const DEFAULT_ACCENT = '#6B935C'
@@ -99,13 +100,14 @@ export default function MobileLogoSection({ sectionRef }: { sectionRef: React.Re
   const openLogo = logos.find(l => l.id === openId) ?? null
 
   return (
-    <div ref={sectionRef} id="logos" style={{ width: '100%', minHeight: '100svh', boxSizing: 'border-box', background: '#0d0d0d', padding: '2rem 1.25rem calc(80px + env(safe-area-inset-bottom))', flexShrink: 0 }}>
-      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} style={{ marginBottom: '1.75rem' }}>
+    <div ref={sectionRef} id="logos" style={{ width: '100%', minHeight: '100svh', boxSizing: 'border-box', background: '#0d0d0d', position: 'relative', overflow: 'hidden', padding: '2rem 1.25rem calc(80px + env(safe-area-inset-bottom))', flexShrink: 0 }}>
+      <GridBackground />
+      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} style={{ marginBottom: '1.75rem', position: 'relative', zIndex: 1 }}>
         <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.8rem, 8.5vw, 3rem)', color: '#f0f0f0', lineHeight: 0.9, letterSpacing: '-0.02em' }}>ЛОГОТИПЫ</h2>
         <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.85rem', color: '#aaa', marginTop: 10, lineHeight: 1.55 }}>Айдентика и знаки для брендов</p>
       </motion.div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10, position: 'relative', zIndex: 1 }}>
         {logos.map((logo, i) => <MobileLogoTile key={logo.id} logo={logo} index={i} onOpen={setOpenId} />)}
       </div>
 
