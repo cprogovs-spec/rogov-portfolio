@@ -45,6 +45,8 @@ type Logo = {
   name: string
   year: string
   comment: string
+  full_desc: string
+  media: MediaItem[]
   size: string
   accent: string
   sort_order: number
@@ -94,6 +96,8 @@ const EMPTY_LOGO: Omit<Logo, 'id'> = {
   name: '',
   year: new Date().getFullYear().toString(),
   comment: '',
+  full_desc: '',
+  media: [],
   size: 'normal',
   accent: '#6B935C',
   sort_order: 0,
@@ -763,7 +767,9 @@ function LogoForm({ initial, onSave, onCancel }: { initial?: Logo; onSave: () =>
   const [form, setForm] = useState<Omit<Logo, 'id'>>(initial ?? EMPTY_LOGO)
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(false)
+  const [mediaUploading, setMediaUploading] = useState(false)
   const [error, setError] = useState('')
+  const mediaFileRef = useRef<HTMLInputElement>(null)
 
   function set<K extends keyof Omit<Logo, 'id'>>(key: K, val: Omit<Logo, 'id'>[K]) {
     setForm(f => ({ ...f, [key]: val }))
@@ -779,6 +785,30 @@ function LogoForm({ initial, onSave, onCancel }: { initial?: Logo; onSave: () =>
     } finally {
       setUploading(false)
     }
+  }
+
+  async function handleMediaUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files ?? [])
+    if (!files.length) return
+    setMediaUploading(true)
+    try {
+      const newItems: MediaItem[] = await Promise.all(
+        files.map(async f => {
+          const url = await uploadMediaFile(f)
+          return { url, type: f.type.startsWith('video/') ? 'video' as const : 'image' as const }
+        })
+      )
+      set('media', [...(form.media ?? []), ...newItems])
+    } catch (err) {
+      setError('Ошибка загрузки: ' + (err as Error).message)
+    } finally {
+      setMediaUploading(false)
+      e.target.value = ''
+    }
+  }
+
+  function removeMedia(index: number) {
+    set('media', (form.media ?? []).filter((_, i) => i !== index))
   }
 
   async function handleSave() {
@@ -804,8 +834,12 @@ function LogoForm({ initial, onSave, onCancel }: { initial?: Logo; onSave: () =>
         </div>
       </div>
       <div style={S.formField}>
-        <label style={S.label}>КОММЕНТАРИЙ (опционально)</label>
+        <label style={S.label}>КОРОТКОЕ ОПИСАНИЕ (показывается в lightbox)</label>
         <textarea style={S.textarea} value={form.comment} onChange={e => set('comment', e.target.value)} />
+      </div>
+      <div style={S.formField}>
+        <label style={S.label}>ИСТОРИЯ СОЗДАНИЯ (полный кейс)</label>
+        <RichTextEditor value={form.full_desc} onChange={v => set('full_desc', v)} />
       </div>
       <div style={S.formGrid}>
         <div style={S.formField}>
@@ -844,6 +878,49 @@ function LogoForm({ initial, onSave, onCancel }: { initial?: Logo; onSave: () =>
           </div>
         )}
       </div>
+
+      <div style={S.formField}>
+        <label style={S.label}>ФОТО ПРОЦЕССА (скетчи, варианты, гайдлайн)</label>
+        <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
+          <button type="button" onClick={() => mediaFileRef.current?.click()} disabled={mediaUploading}
+            style={{ ...S.btn, whiteSpace: 'nowrap', opacity: mediaUploading ? 0.6 : 1 }}>
+            {mediaUploading ? 'Загрузка...' : '↑ Загрузить файлы'}
+          </button>
+          <input ref={mediaFileRef} type="file" accept="image/*,video/*" multiple style={{ display: 'none' }} onChange={handleMediaUpload} />
+        </div>
+        {(form.media ?? []).length > 0 && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {(form.media ?? []).map((item, i) => (
+              <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', background: '#111', border: '1px solid #1e1e1e', borderRadius: 4, padding: 8 }}>
+                <div style={{ position: 'relative', flexShrink: 0 }}>
+                  {item.type === 'video'
+                    ? <video src={item.url} style={{ width: 120, height: 72, objectFit: 'cover', display: 'block', borderRadius: 3 }} />
+                    : <img src={item.url} alt="" style={{ width: 120, height: 72, objectFit: 'cover', display: 'block', borderRadius: 3 }} />
+                  }
+                  <button type="button" onClick={() => removeMedia(i)}
+                    style={{ position: 'absolute', top: 3, right: 3, width: 18, height: 18, background: 'rgba(0,0,0,0.7)', border: 'none', borderRadius: '50%', color: '#fff', cursor: 'pointer', fontSize: 10, lineHeight: '18px', textAlign: 'center', padding: 0 }}>
+                    ✕
+                  </button>
+                </div>
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  <label style={{ ...S.label, marginBottom: 0 }}>ПОДПИСЬ</label>
+                  <input
+                    value={item.caption ?? ''}
+                    onChange={e => {
+                      const updated = [...(form.media ?? [])]
+                      updated[i] = { ...updated[i], caption: e.target.value }
+                      set('media', updated)
+                    }}
+                    placeholder="Например: первый скетч, финальный вариант..."
+                    style={{ ...S.input, fontSize: 12, padding: '6px 10px' }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       <div style={S.formField}>
         <label style={S.label}>ПОРЯДОК СОРТИРОВКИ</label>
         <input type="number" style={S.input} value={form.sort_order}

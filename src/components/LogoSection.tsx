@@ -2,11 +2,13 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
+import CoverMedia from './CoverMedia'
 import { useEscapeClose } from '@/hooks/useEscapeClose'
 import { usePagination, usePaginationWheel } from '@/hooks/usePagination'
 import { PaginationDots, PageTransition } from './CasesPagination'
 import GridBackground from './GridBackground'
 import { supabase } from '@/lib/supabase'
+import { RichContent } from '@/lib/renderContent'
 
 const DEFAULT_ACCENT = '#6B935C'
 const ITEMS_PER_PAGE = 10
@@ -17,6 +19,8 @@ type Logo = {
   name: string
   year: string
   comment: string
+  fullDesc: string
+  media: { url: string; type: 'image' | 'video'; caption?: string }[]
   size: 'normal' | 'wide'
   accent: string
 }
@@ -73,52 +77,95 @@ function LogoTile({ logo, index, onOpen }: { logo: Logo; index: number; onOpen: 
   )
 }
 
-function LogoLightbox({ logo, onClose }: { logo: Logo; onClose: () => void }) {
+function LogoExpanded({ logo, onClose }: { logo: Logo; onClose: () => void }) {
   useEscapeClose(onClose)
   return (
     <>
       <motion.div
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
         onClick={onClose}
-        style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', zIndex: 200, backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)', zIndex: 200, backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)' }}
+      />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.97, y: 12 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.98, y: 8 }}
+        transition={{ type: 'spring', stiffness: 280, damping: 30 }}
+        style={{
+          position: 'fixed', top: '5vh', left: '5vw', right: '5vw', bottom: '10vh',
+          background: '#0e0e0e', border: `1px solid ${logo.accent}66`, borderRadius: 4,
+          zIndex: 201, display: 'flex', flexDirection: 'column', overflow: 'hidden',
+        }}
       >
-        <motion.div
-          initial={{ opacity: 0, scale: 0.94, y: 12 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.96, y: 8 }}
-          transition={{ type: 'spring', stiffness: 340, damping: 30 }}
-          onClick={e => e.stopPropagation()}
-          style={{
-            width: 'min(480px, 88vw)',
-            background: `${logo.accent}14`,
-            border: `1px solid ${logo.accent}55`,
-            borderRadius: 10,
-            padding: '3rem 2rem',
-            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem',
-            boxShadow: `0 30px 80px -20px ${logo.accent}44`,
-          }}
-        >
-          <img src={logo.image} alt={logo.name} style={{ maxWidth: '60%', maxHeight: 160, objectFit: 'contain' }} />
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ display: 'flex', gap: 10, justifyContent: 'center', alignItems: 'baseline', marginBottom: 8 }}>
-              <span style={{ fontFamily: 'var(--font-display)', fontSize: '1.4rem', color: '#e8e8e8' }}>{logo.name}</span>
-              {logo.year && <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem', color: logo.accent }}>{logo.year}</span>}
+        <div style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none', background: `radial-gradient(ellipse at 20% 20%, ${logo.accent}18 0%, transparent 60%)` }} />
+
+        <div style={{ position: 'relative', zIndex: 2, flex: 1, overflow: 'hidden', display: 'flex' }}>
+          {/* LEFT — logo + text */}
+          <div style={{ flex: '0 0 42%', overflow: 'auto', padding: 'clamp(2rem, 3vw, 3rem)', borderRight: `1px solid ${logo.accent}22` }}>
+            <motion.button
+              onClick={onClose}
+              whileHover={{ color: '#f0f0f0', scale: 1.1 }}
+              style={{
+                position: 'absolute', top: '1.5rem', right: 'calc(58% + 1rem)',
+                fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.1em',
+                color: '#aaa', background: 'none', border: '1px solid #2a2a2a',
+                padding: '6px 12px', cursor: 'pointer', borderRadius: 2,
+              }}
+            >ESC ✕</motion.button>
+
+            <div style={{
+              width: 140, height: 140, borderRadius: 8,
+              background: `${logo.accent}14`, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              padding: '1.25rem', marginBottom: '1.75rem',
+            }}>
+              <img src={logo.image} alt={logo.name} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
             </div>
+
+            <div style={{ display: 'flex', gap: 10, alignItems: 'baseline', marginBottom: '1.75rem' }}>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: '#e8e8e8', lineHeight: 0.95, letterSpacing: '-0.02em' }}>{logo.name}</h2>
+              {logo.year && <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.85rem', color: logo.accent }}>{logo.year}</span>}
+            </div>
+
             {logo.comment && (
-              <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.85rem', color: '#aaa', lineHeight: 1.6, maxWidth: 360 }}>{logo.comment}</p>
+              <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.85rem', color: '#c0c0c0', lineHeight: 1.7, marginBottom: '1.5rem' }}>{logo.comment}</p>
+            )}
+
+            <div style={{ height: 1, background: `linear-gradient(90deg, ${logo.accent}66, transparent)`, marginBottom: '1.75rem' }} />
+
+            {logo.fullDesc ? (
+              <RichContent html={logo.fullDesc} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.88rem', color: '#c0c0c0', lineHeight: 1.8 }} />
+            ) : (
+              <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#555', letterSpacing: '0.05em' }}>История создания скоро появится</p>
             )}
           </div>
-          <motion.button
-            onClick={onClose}
-            whileHover={{ color: '#f0f0f0' }}
-            style={{
-              position: 'absolute', top: '1rem', right: '1rem',
-              fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.1em',
-              color: '#aaa', background: 'none', border: '1px solid #2a2a2a',
-              padding: '5px 10px', cursor: 'pointer', borderRadius: 3,
-            }}
-          >ESC ✕</motion.button>
-        </motion.div>
+
+          {/* RIGHT — process media */}
+          <div style={{ flex: 1, overflow: 'auto', padding: 'clamp(1.5rem, 2.5vw, 2.5rem)', display: 'flex', flexDirection: 'column', gap: 24 }}>
+            {logo.media && logo.media.length > 0 ? (
+              <>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.18em', color: '#555' }}>ПРОЦЕСС — {logo.media.length}</div>
+                {logo.media.map((item, i) => (
+                  <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    <div style={{ borderRadius: 4, overflow: 'hidden', border: `1px solid ${logo.accent}33`, aspectRatio: '16/9', background: '#0a0a0a' }}>
+                      <CoverMedia src={item.url} type={item.type} hovered />
+                    </div>
+                    {item.caption && (
+                      <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: logo.accent, marginTop: 2, flexShrink: 0 }}>↳</span>
+                        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.78rem', color: '#888', lineHeight: 1.6, margin: 0 }}>{item.caption}</p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </>
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', opacity: 0.3 }}>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.15em', color: '#555' }}>НЕТ ФОТО ПРОЦЕССА</div>
+              </div>
+            )}
+          </div>
+        </div>
       </motion.div>
     </>
   )
@@ -146,6 +193,8 @@ export default function LogoSection() {
             name: row.name ?? '',
             year: row.year ?? '',
             comment: row.comment ?? '',
+            fullDesc: row.full_desc ?? '',
+            media: Array.isArray(row.media) ? row.media : [],
             size: row.size === 'wide' ? 'wide' : 'normal',
             accent: row.accent ?? DEFAULT_ACCENT,
           })))
@@ -175,7 +224,7 @@ export default function LogoSection() {
       </div>
 
       <AnimatePresence>
-        {openLogo && <LogoLightbox key={openLogo.id} logo={openLogo} onClose={() => setOpenId(null)} />}
+        {openLogo && <LogoExpanded key={openLogo.id} logo={openLogo} onClose={() => setOpenId(null)} />}
       </AnimatePresence>
     </div>
   )
