@@ -6,6 +6,7 @@ import CoverMedia from './CoverMedia'
 import { useEscapeClose } from '@/hooks/useEscapeClose'
 import { usePagination, usePaginationWheel } from '@/hooks/usePagination'
 import { PaginationDots, PageTransition } from './CasesPagination'
+import WantAlsoButton from './WantAlsoButton'
 import { supabase } from '@/lib/supabase'
 import { RichContent } from '@/lib/renderContent'
 
@@ -173,6 +174,8 @@ function WorkExpanded({ w, onClose }: { w: Work; onClose: () => void }) {
 
             <div style={{ height: 1, background: `linear-gradient(90deg, ${w.accent}66, transparent)`, marginBottom: '1.75rem' }} />
             <RichContent html={w.fullDesc} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.88rem', color: '#c0c0c0', lineHeight: 1.8 }} />
+
+            <WantAlsoButton accent={w.accent} />
           </div>
 
           {/* RIGHT — media */}

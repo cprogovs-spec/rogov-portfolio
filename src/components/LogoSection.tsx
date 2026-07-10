@@ -7,6 +7,7 @@ import { useEscapeClose } from '@/hooks/useEscapeClose'
 import { usePagination, usePaginationWheel } from '@/hooks/usePagination'
 import { PaginationDots, PageTransition } from './CasesPagination'
 import GridBackground from './GridBackground'
+import WantAlsoButton from './WantAlsoButton'
 import { supabase } from '@/lib/supabase'
 import { RichContent } from '@/lib/renderContent'
 
@@ -138,6 +139,8 @@ function LogoExpanded({ logo, onClose }: { logo: Logo; onClose: () => void }) {
             ) : (
               <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#555', letterSpacing: '0.05em' }}>История создания скоро появится</p>
             )}
+
+            <WantAlsoButton accent={logo.accent} />
           </div>
 
           {/* RIGHT — process media */}

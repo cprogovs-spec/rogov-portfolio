@@ -6,6 +6,7 @@ import CoverMedia from './CoverMedia'
 import { useEscapeClose } from '@/hooks/useEscapeClose'
 import { usePagination, usePaginationWheel } from '@/hooks/usePagination'
 import { PaginationDots, PageTransition } from './CasesPagination'
+import WantAlsoButton from './WantAlsoButton'
 import { supabase } from '@/lib/supabase'
 import { RichContent } from '@/lib/renderContent'
 
@@ -202,6 +203,8 @@ function CaseExpanded({ c, onClose }: { c: Case; onClose: () => void }) {
             <div style={{ height: 1, background: `linear-gradient(90deg, ${c.accent}66, transparent)`, marginBottom: '1.75rem' }} />
 
             <RichContent html={c.fullDesc} style={{ fontFamily: 'var(--font-sans)', fontSize: '0.88rem', color: '#c0c0c0', lineHeight: 1.8 }} />
+
+            <WantAlsoButton accent={c.accent} />
           </div>
 
           {/* RIGHT — media gallery */}

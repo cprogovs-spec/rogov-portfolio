@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
 import CoverMedia from '@/components/CoverMedia'
 import GridBackground from '@/components/GridBackground'
+import WantAlsoButton from '@/components/WantAlsoButton'
 import { supabase } from '@/lib/supabase'
 import { RichContent } from '@/lib/renderContent'
 
@@ -130,6 +131,8 @@ function MobileLogoExpanded({ logo, onClose }: { logo: Logo; onClose: () => void
               </div>
             </div>
           )}
+
+          <WantAlsoButton accent={logo.accent} mobile />
         </div>
       </motion.div>
     </>

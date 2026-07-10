@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
 import CoverMedia from '@/components/CoverMedia'
+import WantAlsoButton from '@/components/WantAlsoButton'
 import { supabase } from '@/lib/supabase'
 import { RichContent } from '@/lib/renderContent'
 
@@ -169,6 +170,8 @@ function MobileCaseExpanded({ c, onClose }: { c: Case; onClose: () => void }) {
               </div>
             </div>
           )}
+
+          <WantAlsoButton accent={c.accent} mobile />
         </div>
       </motion.div>
     </>
