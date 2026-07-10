@@ -26,7 +26,10 @@ export function usePaginationWheel(page: number, totalPages: number, setPage: (p
 
   const onWheel = useCallback((e: React.WheelEvent) => {
     if (totalPages <= 1) return
-    const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX
+    // Trackpad horizontal swipes (deltaX-dominant) are panel-navigation gestures —
+    // never intercept those, only a vertical wheel/scroll should page through the grid.
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return
+    const delta = e.deltaY
     if (Math.abs(delta) < 10) return
 
     const goingNext = delta > 0

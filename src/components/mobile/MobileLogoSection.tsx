@@ -29,16 +29,13 @@ function MobileLogoTile({ logo, index, onOpen }: { logo: Logo; index: number; on
       whileTap={{ scale: 0.97 }}
       style={{
         gridColumn: isWide ? 'span 2' : 'span 1',
-        background: `${logo.accent}14`,
-        border: `1px solid ${logo.accent}33`,
-        borderRadius: 8,
         aspectRatio: isWide ? '2.2/1' : '1/1',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        padding: '1rem',
+        padding: '0.75rem',
         WebkitTapHighlightColor: 'transparent',
       }}
     >
-      <img src={logo.image} alt={logo.name} style={{ maxWidth: '70%', maxHeight: '60%', objectFit: 'contain' }} />
+      <img src={logo.image} alt={logo.name} style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'grayscale(1)', opacity: 0.75 }} />
     </motion.div>
   )
 }

@@ -36,38 +36,38 @@ function LogoTile({ logo, index, onOpen }: { logo: Logo; index: number; onOpen: 
       style={{
         gridColumn: isWide ? 'span 2' : 'span 1',
         aspectRatio: isWide ? '2.15/1' : '1/1',
-        background: `${logo.accent}14`,
-        border: `1px solid ${hovered ? logo.accent + '88' : logo.accent + '2a'}`,
-        borderRadius: 8,
         cursor: 'pointer',
         position: 'relative',
         overflow: 'hidden',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '1.5rem',
-        boxShadow: hovered ? `0 12px 30px -8px ${logo.accent}55` : 'none',
-        transition: 'border-color 0.25s, box-shadow 0.25s',
+        padding: '0.75rem',
       }}
     >
       <img
         src={logo.image}
         alt={logo.name}
-        style={{ maxWidth: '70%', maxHeight: '60%', objectFit: 'contain', filter: hovered ? 'none' : 'grayscale(0.15)' }}
+        style={{
+          width: '100%', height: '100%', objectFit: 'contain',
+          filter: hovered ? 'grayscale(0)' : 'grayscale(1)',
+          opacity: hovered ? 1 : 0.75,
+          transform: hovered ? 'scale(1.04)' : 'scale(1)',
+          transition: 'filter 0.3s ease, opacity 0.3s ease, transform 0.3s ease',
+        }}
       />
 
       <motion.div
-        animate={{ y: hovered ? 0 : '100%', opacity: hovered ? 1 : 0 }}
-        transition={{ duration: 0.25, ease: 'easeOut' }}
+        animate={{ opacity: hovered ? 1 : 0, y: hovered ? 0 : 6 }}
+        transition={{ duration: 0.2, ease: 'easeOut' }}
         style={{
           position: 'absolute', bottom: 0, left: 0, right: 0,
-          background: `linear-gradient(to top, ${logo.accent}22 0%, transparent 100%)`,
-          padding: '0.6rem 1rem 0.5rem',
           display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
+          padding: '0.4rem 0.2rem 0',
         }}
       >
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.08em', color: '#e8e8e8' }}>{logo.name}</span>
-        {logo.year && <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: logo.accent }}>{logo.year}</span>}
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.08em', color: '#e8e8e8' }}>{logo.name}</span>
+        {logo.year && <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', color: logo.accent }}>{logo.year}</span>}
       </motion.div>
     </motion.div>
   )
