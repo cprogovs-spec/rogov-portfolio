@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import CoverMedia from './CoverMedia'
 import { useEscapeClose } from '@/hooks/useEscapeClose'
-import { usePagination } from '@/hooks/usePagination'
+import { usePagination, usePaginationWheel } from '@/hooks/usePagination'
 import { PaginationDots, PageTransition } from './CasesPagination'
 import { supabase } from '@/lib/supabase'
 import { RichContent } from '@/lib/renderContent'
@@ -246,6 +246,7 @@ export default function MotionSection() {
 
   const openWork = works.find(w => w.id === openId) ?? null
   const { page, setPage, pageItems, totalPages } = usePagination(works, ITEMS_PER_PAGE)
+  const onWheel = usePaginationWheel(page, totalPages, setPage)
 
   return (
     <div style={{ width: '100%', height: '100%', background: '#0d0d0d', display: 'flex', flexDirection: 'column', padding: '2rem 2rem 0', overflow: 'hidden', position: 'relative' }}>
@@ -254,7 +255,7 @@ export default function MotionSection() {
         <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.88rem', color: '#aaa', marginTop: 10, maxWidth: 360 }}>Motion-дизайн для брендов, продуктов и соцсетей — от UI-микроанимаций до видеороликов</p>
       </motion.div>
 
-      <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', paddingBottom: 16 }}>
+      <div onWheel={onWheel} style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', paddingBottom: 16 }}>
         <PageTransition pageKey={page}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gridAutoRows: '1fr', gridAutoFlow: 'dense', gap: 10, height: 'calc(100vh - 300px)' }}>
             {pageItems.map((w, i) => <WorkCard key={w.id} w={w} index={i} onOpen={setOpenId} />)}

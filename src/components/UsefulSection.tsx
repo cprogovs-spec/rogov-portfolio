@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useEscapeClose } from '@/hooks/useEscapeClose'
-import { usePagination } from '@/hooks/usePagination'
+import { usePagination, usePaginationWheel } from '@/hooks/usePagination'
 import { PaginationDots, PageTransition } from './CasesPagination'
 import { RichContent } from '@/lib/renderContent'
 
@@ -186,6 +186,7 @@ export default function UsefulSection() {
 
   const openArticle = articles.find(a => a.id === openId) ?? null
   const { page, setPage, pageItems, totalPages } = usePagination(articles, ITEMS_PER_PAGE)
+  const onWheel = usePaginationWheel(page, totalPages, setPage)
 
   return (
     <div style={{
@@ -204,7 +205,7 @@ export default function UsefulSection() {
         </p>
       </motion.div>
 
-      <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', paddingBottom: 16 }}>
+      <div onWheel={onWheel} style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', paddingBottom: 16 }}>
         <PageTransition pageKey={page}>
           <div style={{
             display: 'grid',
