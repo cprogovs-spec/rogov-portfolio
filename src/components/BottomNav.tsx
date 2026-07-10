@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useCallback } from 'react'
 
-const NAV_ITEMS = ['ВЕБ-ДИЗАЙН', 'НЕЙРОСЕТИ', 'МОУШЕН', 'ПОЛЕЗНОЕ', 'КОНТАКТЫ']
+const NAV_ITEMS = ['ВЕБ-ДИЗАЙН', 'АНИМАЦИЯ', 'ЛОГОТИПЫ', 'ПОЛЕЗНОЕ', 'КОНТАКТЫ']
 
 type Ripple = { id: number; x: number; y: number }
 

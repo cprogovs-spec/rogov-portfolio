@@ -3,8 +3,8 @@
 import { useRef, useState, useEffect } from 'react'
 import Header from '@/components/Header'
 import WebDesignSection from '@/components/WebDesignSection'
-import AiSection from '@/components/AiSection'
 import MotionSection from '@/components/MotionSection'
+import LogoSection from '@/components/LogoSection'
 import ContactSection from '@/components/ContactSection'
 import UsefulSection from '@/components/UsefulSection'
 import BottomNav from '@/components/BottomNav'
@@ -98,8 +98,8 @@ export default function Home() {
           <WebDesignSection />
         </div>
 
-        <div style={panelStyle}><AiSection /></div>
         <div style={panelStyle}><MotionSection /></div>
+        <div style={panelStyle}><LogoSection /></div>
         <div style={panelStyle}><UsefulSection /></div>
         <div style={panelStyle}><ContactSection /></div>
       </div>

@@ -2,15 +2,15 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useCallback } from 'react'
-import { Layers, Brain, Play, Mail, House, BookOpen } from 'lucide-react'
+import { Layers, Sparkles, Play, Mail, House, BookOpen } from 'lucide-react'
 
 const TABS = [
-  { id: 'home',    label: 'ГЛАВНАЯ', Icon: House },
-  { id: 'web',     label: 'ВЕБ',     Icon: Layers },
-  { id: 'ai',      label: 'НЕЙРО',   Icon: Brain },
-  { id: 'motion',  label: 'МОУШЕН',  Icon: Play },
-  { id: 'useful',  label: 'СТАТЬИ',  Icon: BookOpen },
-  { id: 'contact', label: 'КОНТАКТ', Icon: Mail },
+  { id: 'home',    label: 'ГЛАВНАЯ',   Icon: House },
+  { id: 'web',     label: 'ВЕБ',       Icon: Layers },
+  { id: 'motion',  label: 'АНИМАЦИЯ',  Icon: Play },
+  { id: 'logos',   label: 'ЛОГО',      Icon: Sparkles },
+  { id: 'useful',  label: 'СТАТЬИ',    Icon: BookOpen },
+  { id: 'contact', label: 'КОНТАКТ',   Icon: Mail },
 ]
 
 type Ripple = { id: number; x: number; y: number }

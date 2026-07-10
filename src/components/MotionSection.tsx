@@ -4,10 +4,13 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import CoverMedia from './CoverMedia'
 import { useEscapeClose } from '@/hooks/useEscapeClose'
+import { usePagination } from '@/hooks/usePagination'
+import { PaginationDots, PageTransition } from './CasesPagination'
 import { supabase } from '@/lib/supabase'
 import { RichContent } from '@/lib/renderContent'
 
 const DEFAULT_ACCENT = '#C4873A'
+const ITEMS_PER_PAGE = 6
 
 type Work = {
   id: string
@@ -23,11 +26,13 @@ type Work = {
   colors: string[]
   cover: string
   coverType: 'image' | 'video'
+  format: 'horizontal' | 'vertical'
   media: { url: string; type: 'image' | 'video'; caption?: string }[]
 }
 
 function WorkCard({ w, index, onOpen }: { w: Work; index: number; onOpen: (id: string) => void }) {
   const [hovered, setHovered] = useState(false)
+  const isWide = w.format === 'horizontal'
 
   return (
     <motion.div
@@ -48,6 +53,8 @@ function WorkCard({ w, index, onOpen }: { w: Work; index: number; onOpen: (id: s
         display: 'flex',
         flexDirection: 'column',
         transition: 'border-color 0.3s',
+        gridColumn: isWide ? 'span 2' : 'span 1',
+        gridRow: isWide ? 'span 1' : 'span 2',
       }}
     >
       {/* Cover fills entire card */}
@@ -230,6 +237,7 @@ export default function MotionSection() {
             colors: row.colors ?? [],
             cover: row.cover_url ?? '',
             coverType: row.cover_type ?? 'image',
+            format: row.format === 'vertical' ? 'vertical' : 'horizontal',
             media: Array.isArray(row.media) ? row.media : [],
           })))
         }
@@ -237,16 +245,22 @@ export default function MotionSection() {
   }, [])
 
   const openWork = works.find(w => w.id === openId) ?? null
+  const { page, setPage, pageItems, totalPages } = usePagination(works, ITEMS_PER_PAGE)
 
   return (
     <div style={{ width: '100%', height: '100%', background: '#0d0d0d', display: 'flex', flexDirection: 'column', padding: '2rem 2rem 0', overflow: 'hidden', position: 'relative' }}>
       <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }} style={{ marginBottom: '1.5rem' }}>
-        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 5vw, 4rem)', color: '#f0f0f0', lineHeight: 0.9, letterSpacing: '-0.02em' }}>АНИМАЦИИ</h2>
+        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 5vw, 4rem)', color: '#f0f0f0', lineHeight: 0.9, letterSpacing: '-0.02em' }}>АНИМАЦИЯ</h2>
         <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.88rem', color: '#aaa', marginTop: 10, maxWidth: 360 }}>Motion-дизайн для брендов, продуктов и соцсетей — от UI-микроанимаций до видеороликов</p>
       </motion.div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, flex: 1, overflow: 'hidden', paddingBottom: 52 }}>
-        {works.map((w, i) => <WorkCard key={w.id} w={w} index={i} onOpen={setOpenId} />)}
+      <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', paddingBottom: 16 }}>
+        <PageTransition pageKey={page}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gridAutoRows: '1fr', gridAutoFlow: 'dense', gap: 10, height: 'calc(100vh - 300px)' }}>
+            {pageItems.map((w, i) => <WorkCard key={w.id} w={w} index={i} onOpen={setOpenId} />)}
+          </div>
+        </PageTransition>
+        <PaginationDots page={page} totalPages={totalPages} onChange={setPage} accent={DEFAULT_ACCENT} />
       </div>
 
       <AnimatePresence>

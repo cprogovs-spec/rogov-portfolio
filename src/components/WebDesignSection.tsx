@@ -4,8 +4,12 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import CoverMedia from './CoverMedia'
 import { useEscapeClose } from '@/hooks/useEscapeClose'
+import { usePagination } from '@/hooks/usePagination'
+import { PaginationDots, PageTransition } from './CasesPagination'
 import { supabase } from '@/lib/supabase'
 import { RichContent } from '@/lib/renderContent'
+
+const ITEMS_PER_PAGE = 6
 
 type Case = {
   id: string
@@ -268,6 +272,7 @@ export default function WebDesignSection() {
   }, [])
 
   const openCase = cases.find(c => c.id === openId) ?? null
+  const { page, setPage, pageItems, totalPages } = usePagination(cases, ITEMS_PER_PAGE)
 
   return (
     <div style={{
@@ -280,18 +285,21 @@ export default function WebDesignSection() {
         transition={{ duration: 0.5 }}
         style={{ marginBottom: '1.5rem' }}
       >
-        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.85rem', letterSpacing: '0.18em', color: '#6B935C', marginBottom: 8 }}>
-        </div>
         <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 5vw, 4rem)', color: '#f0f0f0', lineHeight: 0.9, letterSpacing: '-0.02em' }}>КЕЙСЫ</h2>
         <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.88rem', color: '#aaa', marginTop: 10, maxWidth: 360 }}>
           Проекты в сфере веб-дизайна — от b2b-платформ до продуктовых интерфейсов
         </p>
       </motion.div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, flex: 1, overflow: 'hidden', paddingBottom: 52 }}>
-        {cases.map((c, i) => (
-          <CaseCard key={c.id} c={c} index={i} onOpen={setOpenId} />
-        ))}
+      <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', paddingBottom: 16 }}>
+        <PageTransition pageKey={page}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, height: 'calc(100vh - 300px)' }}>
+            {pageItems.map((c, i) => (
+              <CaseCard key={c.id} c={c} index={i} onOpen={setOpenId} />
+            ))}
+          </div>
+        </PageTransition>
+        <PaginationDots page={page} totalPages={totalPages} onChange={setPage} />
       </div>
 
       <AnimatePresence>

@@ -33,7 +33,20 @@ type Case = {
   stat_value: string
   stat_label: string
   colors: string[]
+  format: string
   media: MediaItem[]
+  sort_order: number
+  published: boolean
+}
+
+type Logo = {
+  id: string
+  image_url: string
+  name: string
+  year: string
+  comment: string
+  size: string
+  accent: string
   sort_order: number
   published: boolean
 }
@@ -51,8 +64,7 @@ type Article = {
 
 const SECTION_MAP: Record<string, string> = {
   webdesign: 'ВЕБ-ДИЗАЙН',
-  ai: 'НЕЙРОСЕТИ',
-  motion: 'МОУШЕН',
+  motion: 'АНИМАЦИЯ',
 }
 
 const EMPTY_CASE: Omit<Case, 'id'> = {
@@ -71,7 +83,19 @@ const EMPTY_CASE: Omit<Case, 'id'> = {
   stat_value: '',
   stat_label: '',
   colors: [],
+  format: 'horizontal',
   media: [],
+  sort_order: 0,
+  published: true,
+}
+
+const EMPTY_LOGO: Omit<Logo, 'id'> = {
+  image_url: '',
+  name: '',
+  year: new Date().getFullYear().toString(),
+  comment: '',
+  size: 'normal',
+  accent: '#6B935C',
   sort_order: 0,
   published: true,
 }
@@ -432,23 +456,24 @@ function CaseForm({
             </div>
           </div>
         )}
-        {section === 'ai' && (
+        {section === 'motion' && (
           <>
             <div style={S.formField}>
-              <label style={S.label}>ЗНАЧЕНИЕ СТАТЫ</label>
-              <input style={S.input} value={form.stat_value} onChange={e => set('stat_value', e.target.value)} placeholder="напр. 2x" />
+              <label style={S.label}>ЦВЕТА (HEX через запятую)</label>
+              <input style={S.input} value={colorsStr} onChange={e => setColorsStr(e.target.value)} placeholder="#fff, #000, ..." />
             </div>
             <div style={S.formField}>
-              <label style={S.label}>ПОДПИСЬ СТАТЫ</label>
-              <input style={S.input} value={form.stat_label} onChange={e => set('stat_label', e.target.value)} placeholder="напр. быстрее" />
+              <label style={S.label}>ФОРМАТ КАРТОЧКИ</label>
+              <div style={{ display: 'flex', gap: '16px', paddingTop: '6px' }}>
+                {[['horizontal', '16:9 (широкая)'], ['vertical', '9:16 (вертикальная)']].map(([v, l]) => (
+                  <label key={v} style={{ color: '#aaa', fontSize: '13px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <input type="radio" name="format" value={v} checked={form.format === v} onChange={() => set('format', v)} />
+                    {l}
+                  </label>
+                ))}
+              </div>
             </div>
           </>
-        )}
-        {section === 'motion' && (
-          <div style={S.formField}>
-            <label style={S.label}>ЦВЕТА (HEX через запятую)</label>
-            <input style={S.input} value={colorsStr} onChange={e => setColorsStr(e.target.value)} placeholder="#fff, #000, ..." />
-          </div>
         )}
       </div>
       <div style={S.formField}>
@@ -617,7 +642,7 @@ function ArticleForm({
 
 // ─── Cases Tab ────────────────────────────────────────────────────────────────
 function CasesTab() {
-  const [activeSection, setActiveSection] = useState<'webdesign' | 'ai' | 'motion'>('webdesign')
+  const [activeSection, setActiveSection] = useState<'webdesign' | 'motion'>('webdesign')
   const [cases, setCases] = useState<Case[]>([])
   const [loading, setLoading] = useState(false)
   const [showForm, setShowForm] = useState(false)
@@ -657,7 +682,7 @@ function CasesTab() {
       <div style={S.subTabs}>
         {(Object.keys(SECTION_MAP) as Array<keyof typeof SECTION_MAP>).map(s => (
           <button key={s} style={S.subTab(activeSection === s)}
-            onClick={() => { setActiveSection(s as 'webdesign' | 'ai' | 'motion'); setShowForm(false) }}>
+            onClick={() => { setActiveSection(s as 'webdesign' | 'motion'); setShowForm(false) }}>
             {SECTION_MAP[s]}
           </button>
         ))}
@@ -728,6 +753,207 @@ function CasesTab() {
           onSave={afterSave}
           onCancel={closeForm}
         />
+      )}
+    </div>
+  )
+}
+
+// ─── Logo Form ──────────────────────────────────────────────────────────────
+function LogoForm({ initial, onSave, onCancel }: { initial?: Logo; onSave: () => void; onCancel: () => void }) {
+  const [form, setForm] = useState<Omit<Logo, 'id'>>(initial ?? EMPTY_LOGO)
+  const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [error, setError] = useState('')
+
+  function set<K extends keyof Omit<Logo, 'id'>>(key: K, val: Omit<Logo, 'id'>[K]) {
+    setForm(f => ({ ...f, [key]: val }))
+  }
+
+  async function handleUpload(file: File) {
+    setUploading(true)
+    try {
+      const url = await uploadMediaFile(file)
+      set('image_url', url)
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Ошибка загрузки')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  async function handleSave() {
+    setSaving(true); setError('')
+    const res = initial
+      ? await supabase.from('logos').update(form).eq('id', initial.id)
+      : await supabase.from('logos').insert(form)
+    setSaving(false)
+    if (res.error) { setError(res.error.message); return }
+    onSave()
+  }
+
+  return (
+    <div style={S.formPanel}>
+      <div style={S.formGrid}>
+        <div style={S.formField}>
+          <label style={S.label}>НАЗВАНИЕ</label>
+          <input style={S.input} value={form.name} onChange={e => set('name', e.target.value)} />
+        </div>
+        <div style={S.formField}>
+          <label style={S.label}>ГОД</label>
+          <input style={S.input} value={form.year} onChange={e => set('year', e.target.value)} />
+        </div>
+      </div>
+      <div style={S.formField}>
+        <label style={S.label}>КОММЕНТАРИЙ (опционально)</label>
+        <textarea style={S.textarea} value={form.comment} onChange={e => set('comment', e.target.value)} />
+      </div>
+      <div style={S.formGrid}>
+        <div style={S.formField}>
+          <label style={S.label}>РАЗМЕР ПЛИТКИ</label>
+          <div style={{ display: 'flex', gap: '16px', paddingTop: '6px' }}>
+            {[['normal', 'Обычный'], ['wide', 'Широкий (2x1)']].map(([v, l]) => (
+              <label key={v} style={{ color: '#aaa', fontSize: '13px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <input type="radio" name="logo-size" value={v} checked={form.size === v} onChange={() => set('size', v)} />
+                {l}
+              </label>
+            ))}
+          </div>
+        </div>
+        <div style={S.formField}>
+          <label style={S.label}>ФОН ПЛИТКИ (HEX)</label>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <input type="color" value={form.accent} onChange={e => set('accent', e.target.value)}
+              style={{ width: '40px', height: '34px', border: 'none', backgroundColor: 'transparent', cursor: 'pointer' }} />
+            <input style={{ ...S.input, flex: 1 }} value={form.accent} onChange={e => set('accent', e.target.value)} />
+          </div>
+        </div>
+      </div>
+      <div style={S.formField}>
+        <label style={S.label}>ИЗОБРАЖЕНИЕ ЛОГОТИПА (PNG/SVG с прозрачностью)</label>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <input style={{ ...S.input, flex: 1 }} value={form.image_url} onChange={e => set('image_url', e.target.value)} placeholder="https://..." />
+          <label style={{ ...S.btnSmall, cursor: 'pointer', whiteSpace: 'nowrap', marginRight: 0, opacity: uploading ? 0.5 : 1 }}>
+            {uploading ? 'ЗАГРУЗКА...' : '↑ ФАЙЛ'}
+            <input type="file" accept="image/*" style={{ display: 'none' }} disabled={uploading}
+              onChange={e => { const f = e.target.files?.[0]; if (f) handleUpload(f) }} />
+          </label>
+        </div>
+        {form.image_url && (
+          <div style={{ marginTop: 8, background: `${form.accent}14`, borderRadius: 4, padding: 12, display: 'inline-block' }}>
+            <img src={form.image_url} alt="" style={{ maxHeight: 80, maxWidth: 160, objectFit: 'contain' }} />
+          </div>
+        )}
+      </div>
+      <div style={S.formField}>
+        <label style={S.label}>ПОРЯДОК СОРТИРОВКИ</label>
+        <input type="number" style={S.input} value={form.sort_order}
+          onChange={e => set('sort_order', parseInt(e.target.value) || 0)} />
+      </div>
+      <div style={{ ...S.formField, display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <input type="checkbox" id="pub_logo" checked={form.published} onChange={e => set('published', e.target.checked)} />
+        <label htmlFor="pub_logo" style={{ color: '#aaa', fontSize: '13px', cursor: 'pointer' }}>Опубликован</label>
+      </div>
+      {error && <p style={{ color: '#c0392b', fontSize: '12px', marginBottom: '12px' }}>{error}</p>}
+      <div style={{ display: 'flex', gap: '10px', marginTop: '8px' }}>
+        <button style={S.btn} onClick={handleSave} disabled={saving}>
+          {saving ? 'СОХРАНЕНИЕ...' : 'СОХРАНИТЬ'}
+        </button>
+        <button style={S.btnSecondary} onClick={onCancel}>ОТМЕНА</button>
+      </div>
+    </div>
+  )
+}
+
+// ─── Logos Tab ──────────────────────────────────────────────────────────────
+function LogosTab() {
+  const [logos, setLogos] = useState<Logo[]>([])
+  const [loading, setLoading] = useState(false)
+  const [showForm, setShowForm] = useState(false)
+  const [editing, setEditing] = useState<Logo | undefined>()
+
+  async function load() {
+    setLoading(true)
+    const { data } = await supabase.from('logos').select('*').order('sort_order')
+    setLogos(data ?? [])
+    setLoading(false)
+  }
+
+  useEffect(() => { load() }, [])
+
+  async function togglePublished(item: Logo) {
+    await supabase.from('logos').update({ published: !item.published }).eq('id', item.id)
+    load()
+  }
+
+  async function deleteLogo(id: string) {
+    if (!confirm('Удалить логотип?')) return
+    await supabase.from('logos').delete().eq('id', id)
+    load()
+  }
+
+  function openNew() { setEditing(undefined); setShowForm(true) }
+  function openEdit(l: Logo) { setEditing(l); setShowForm(true) }
+  function closeForm() { setShowForm(false); setEditing(undefined) }
+  function afterSave() { closeForm(); load() }
+
+  return (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+        <span style={{ color: '#555', fontSize: '12px' }}>{logos.length} логотипов</span>
+        <button style={S.btn} onClick={openNew}>+ ДОБАВИТЬ ЛОГОТИП</button>
+      </div>
+
+      {loading ? (
+        <p style={{ color: '#555' }}>Загрузка...</p>
+      ) : (
+        <table style={S.table}>
+          <thead>
+            <tr>
+              <th style={S.th}>ЛОГОТИП</th>
+              <th style={S.th}>НАЗВАНИЕ</th>
+              <th style={S.th}>ГОД</th>
+              <th style={S.th}>ОПУБЛИКОВАН</th>
+              <th style={S.th}>ДЕЙСТВИЯ</th>
+            </tr>
+          </thead>
+          <tbody>
+            {logos.length === 0 && (
+              <tr><td colSpan={5} style={{ ...S.td, color: '#555', textAlign: 'center', padding: '32px' }}>Нет логотипов</td></tr>
+            )}
+            {logos.map(l => (
+              <tr key={l.id}>
+                <td style={S.td}>
+                  <div style={{ background: `${l.accent}14`, borderRadius: 4, padding: 6, display: 'inline-block' }}>
+                    {l.image_url && <img src={l.image_url} alt="" style={{ height: 28, maxWidth: 70, objectFit: 'contain' }} />}
+                  </div>
+                </td>
+                <td style={S.td}><span style={{ color: '#e0e0e0' }}>{l.name}</span></td>
+                <td style={{ ...S.td, color: '#666' }}>{l.year}</td>
+                <td style={S.td}>
+                  <button
+                    onClick={() => togglePublished(l)}
+                    style={{
+                      padding: '3px 10px', borderRadius: '3px', border: 'none', cursor: 'pointer',
+                      fontSize: '11px', fontFamily: 'monospace',
+                      backgroundColor: l.published ? '#1a3a1a' : '#2a1a1a',
+                      color: l.published ? '#6B935C' : '#933a3a',
+                    }}
+                  >
+                    {l.published ? 'ДА' : 'НЕТ'}
+                  </button>
+                </td>
+                <td style={S.td}>
+                  <button style={S.btnSmall} onClick={() => openEdit(l)}>Изм.</button>
+                  <button style={S.btnDanger} onClick={() => deleteLogo(l.id)}>Удал.</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      {showForm && (
+        <LogoForm initial={editing} onSave={afterSave} onCancel={closeForm} />
       )}
     </div>
   )
@@ -1081,7 +1307,7 @@ function SeoTab() {
 
 // ─── Dashboard Page ───────────────────────────────────────────────────────────
 export default function DashboardPage() {
-  const [tab, setTab] = useState<'cases' | 'articles' | 'contact' | 'seo'>('cases')
+  const [tab, setTab] = useState<'cases' | 'logos' | 'articles' | 'contact' | 'seo'>('cases')
   const router = useRouter()
 
   async function handleLogout() {
@@ -1098,11 +1324,13 @@ export default function DashboardPage() {
       <div style={S.content}>
         <div style={S.tabs}>
           <button style={S.tab(tab === 'cases')} onClick={() => setTab('cases')}>КЕЙСЫ</button>
+          <button style={S.tab(tab === 'logos')} onClick={() => setTab('logos')}>ЛОГОТИПЫ</button>
           <button style={S.tab(tab === 'articles')} onClick={() => setTab('articles')}>СТАТЬИ</button>
           <button style={S.tab(tab === 'contact')} onClick={() => setTab('contact')}>КОНТАКТЫ</button>
           <button style={S.tab(tab === 'seo')} onClick={() => setTab('seo')}>SEO / АНАЛИТИКА</button>
         </div>
         {tab === 'cases' && <CasesTab />}
+        {tab === 'logos' && <LogosTab />}
         {tab === 'articles' && <ArticlesTab />}
         {tab === 'contact' && <ContactTab />}
         {tab === 'seo' && <SeoTab />}

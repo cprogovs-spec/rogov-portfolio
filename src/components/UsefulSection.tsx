@@ -4,9 +4,12 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useEscapeClose } from '@/hooks/useEscapeClose'
+import { usePagination } from '@/hooks/usePagination'
+import { PaginationDots, PageTransition } from './CasesPagination'
 import { RichContent } from '@/lib/renderContent'
 
 const ACCENT = '#9E8A6E'
+const ITEMS_PER_PAGE = 6
 
 type Article = {
   id: string
@@ -182,6 +185,7 @@ export default function UsefulSection() {
   }, [])
 
   const openArticle = articles.find(a => a.id === openId) ?? null
+  const { page, setPage, pageItems, totalPages } = usePagination(articles, ITEMS_PER_PAGE)
 
   return (
     <div style={{
@@ -200,20 +204,20 @@ export default function UsefulSection() {
         </p>
       </motion.div>
 
-      {/* Articles grid */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
-        gridAutoRows: 'max-content',
-        gap: 10,
-        flex: 1,
-        overflowY: 'auto',
-        paddingBottom: 64,
-        scrollbarWidth: 'none',
-      }}>
-        {articles.map((a, i) => (
-          <ArticleCard key={a.id} a={a} index={i} onOpen={setOpenId} />
-        ))}
+      <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', paddingBottom: 16 }}>
+        <PageTransition pageKey={page}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gridAutoRows: 'max-content',
+            gap: 10,
+          }}>
+            {pageItems.map((a, i) => (
+              <ArticleCard key={a.id} a={a} index={i} onOpen={setOpenId} />
+            ))}
+          </div>
+        </PageTransition>
+        <PaginationDots page={page} totalPages={totalPages} onChange={setPage} accent={ACCENT} />
       </div>
 
       <AnimatePresence>

@@ -3,27 +3,27 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
 import MobileHero from './MobileHero'
 import MobileCases from './MobileCases'
-import MobileAiSection from './MobileAiSection'
 import MobileMotionSection from './MobileMotionSection'
+import MobileLogoSection from './MobileLogoSection'
 import MobileUsefulSection from './MobileUsefulSection'
 import MobileContactSection from './MobileContactSection'
 import MobileTabBar from './MobileTabBar'
 
-const SECTION_IDS = ['home', 'web', 'ai', 'motion', 'useful', 'contact']
+const SECTION_IDS = ['home', 'web', 'motion', 'logos', 'useful', 'contact']
 
 export default function MobileLayout() {
   const [activeTab, setActiveTab] = useState('home')
   const containerRef = useRef<HTMLDivElement>(null)
   const heroRef = useRef<HTMLDivElement>(null)
   const webRef = useRef<HTMLDivElement>(null)
-  const aiRef = useRef<HTMLDivElement>(null)
   const motionRef = useRef<HTMLDivElement>(null)
+  const logosRef = useRef<HTMLDivElement>(null)
   const usefulRef = useRef<HTMLDivElement>(null)
   const contactRef = useRef<HTMLDivElement>(null)
 
   const refsMap = useRef<Record<string, React.RefObject<HTMLDivElement | null>>>({
-    home: heroRef, web: webRef, ai: aiRef,
-    motion: motionRef, useful: usefulRef, contact: contactRef,
+    home: heroRef, web: webRef, motion: motionRef,
+    logos: logosRef, useful: usefulRef, contact: contactRef,
   })
 
   useEffect(() => {
@@ -58,8 +58,8 @@ export default function MobileLayout() {
       </div>
 
       <MobileCases sectionRef={webRef} />
-      <MobileAiSection sectionRef={aiRef} />
       <MobileMotionSection sectionRef={motionRef} />
+      <MobileLogoSection sectionRef={logosRef} />
       <MobileUsefulSection sectionRef={usefulRef} />
       <MobileContactSection sectionRef={contactRef} />
 

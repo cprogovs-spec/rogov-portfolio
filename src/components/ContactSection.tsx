@@ -547,7 +547,7 @@ export default function ContactSection() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid #161616' }}>
             <Image src="/logo.svg" alt="Рогов" width={70} height={22} style={{ opacity: 0.25 }} />
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#2a2a2a', letterSpacing: '0.15em' }}>
-              ВЕБ-ДИЗАЙН · НЕЙРОСЕТИ · МОУШЕН
+              ВЕБ-ДИЗАЙН · АНИМАЦИЯ · ЛОГОТИПЫ
             </div>
           </div>
         </div>
